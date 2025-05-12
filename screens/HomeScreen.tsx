@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -6,9 +5,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function HomeScreen(): React.JSX.Element {
   const router = useRouter();
 
-  const resetOnboarding = async (): Promise<void> => {
+  const resetOnboarding = () => {
     try {
-      await AsyncStorage.removeItem('@onboarding_complete');
       router.replace('/onboarding');
     } catch (err) {
       console.log('Error @removeItem: ', err);
