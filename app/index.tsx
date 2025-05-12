@@ -1,8 +1,11 @@
 import HomeScreen from '@/screens/HomeScreen';
 import OnboardingScreen from '@/screens/OnboardingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as NavigationBar from 'expo-navigation-bar';
 import { Redirect } from 'expo-router';
+import * as SystemUI from 'expo-system-ui';
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 export default function Index() {
   const [ready, setReady] = useState(false);
@@ -18,6 +21,17 @@ export default function Index() {
       setReady(true);
     };
     checkInitial();
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      NavigationBar.setVisibilityAsync('hidden');
+      NavigationBar.setBehaviorAsync('inset-swipe'); // swipe 가능
+      SystemUI.setBackgroundColorAsync('transparent'); // 배경 투명하게
+
+      // 강제로 immersive 적용
+      NavigationBar.setPositionAsync('absolute');
+    }
   }, []);
 
   if (!ready) return null;

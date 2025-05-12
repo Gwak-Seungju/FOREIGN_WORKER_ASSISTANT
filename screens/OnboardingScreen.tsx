@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -116,109 +117,111 @@ export default function OnboardingScreen() {
   const isChecked = checkedSteps.includes(currentIndex);
 
   return (
-    <View style={styles.container}>
-      {showExpandedProgress && (
-      <TouchableWithoutFeedback onPress={() => setShowExpandedProgress(false)}>
-        <View style={styles.dimOverlay} />
-      </TouchableWithoutFeedback>
-      )}
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <View style={styles.leftIcon}>
-            {currentIndex > 0 && (
-              <TouchableOpacity onPress={scrollToPrev}>
-                <Entypo name="chevron-left" size={24} color="black" />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <View style={styles.progressWrapper}>
-            <TouchableOpacity onPress={() => setShowExpandedProgress(!showExpandedProgress)}>
-              <View style={showExpandedProgress ? styles.progressBarExpanded : styles.progressBarBackground}>
-                <View style={styles.progressRow}>
-                  {ONBOARDINGDATA.map((_, idx) => (
-                    <TouchableOpacity
-                      key={idx}
-                      onPress={() => scrollToIndex(idx)}
-                      disabled={!showExpandedProgress}
-                    >
-                      <View
-                        style={[
-                          styles.progressBarItem,
-                          idx <= currentIndex && styles.progressBarItemActive,
-                          showExpandedProgress && checkedSteps.includes(idx) && styles.progressBarItemChecked,
-                        ]}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff'}}>
+      <View style={styles.container}>
+        {showExpandedProgress && (
+        <TouchableWithoutFeedback onPress={() => setShowExpandedProgress(false)}>
+          <View style={styles.dimOverlay} />
+        </TouchableWithoutFeedback>
+        )}
+        <View style={styles.headerContainer}>
+          <View style={styles.header}>
+            <View style={styles.leftIcon}>
+              {currentIndex > 0 && (
+                <TouchableOpacity onPress={scrollToPrev}>
+                  <Entypo name="chevron-left" size={24} color="black" />
+                </TouchableOpacity>
+              )}
+            </View>
+            
+            <View style={styles.progressWrapper}>
+              <TouchableOpacity onPress={() => setShowExpandedProgress(!showExpandedProgress)}>
+                <View style={showExpandedProgress ? styles.progressBarExpanded : styles.progressBarBackground}>
+                  <View style={styles.progressRow}>
+                    {ONBOARDINGDATA.map((_, idx) => (
+                      <TouchableOpacity
+                        key={idx}
+                        onPress={() => scrollToIndex(idx)}
+                        disabled={!showExpandedProgress}
                       >
-                        {showExpandedProgress && checkedSteps.includes(idx) && (
-                          <Entypo name="check" size={8} color="green" />
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                  ))}
+                        <View
+                          style={[
+                            styles.progressBarItem,
+                            idx <= currentIndex && styles.progressBarItemActive,
+                            showExpandedProgress && checkedSteps.includes(idx) && styles.progressBarItemChecked,
+                          ]}
+                        >
+                          {showExpandedProgress && checkedSteps.includes(idx) && (
+                            <Entypo name="check" size={8} color="green" />
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  <Text style={styles.progressText}>
+                    {String(currentIndex + 1).padStart(2, '0')} / {String(ONBOARDINGDATA.length).padStart(2, '0')}
+                  </Text>
                 </View>
-                <Text style={styles.progressText}>
-                  {String(currentIndex + 1).padStart(2, '0')} / {String(ONBOARDINGDATA.length).padStart(2, '0')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.rightIcon}>
-            <TouchableOpacity onPress={toggleCheck}>
-              <Entypo name="check" size={20} color={isChecked ? 'green' : 'gray'} />
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
+                  
+            <View style={styles.rightIcon}>
+              <TouchableOpacity onPress={toggleCheck}>
+                <Entypo name="check" size={20} color={isChecked ? 'green' : 'gray'} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
+                  
+        <FlatList
+          data={ONBOARDINGDATA}
+          renderItem={({ item }) => (
+            <View style={[styles.slide, { width }]}> 
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.description}>{item.description}</Text>
+              <Image source={item.image} style={styles.image} resizeMode="contain" />
+            </View>
+          )}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          keyExtractor={(item) => item.id}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: false }
+          )}
+          onViewableItemsChanged={viewableItemsChanged}
+          viewabilityConfig={viewConfig}
+          ref={slidesRef}
+          initialNumToRender={2}
+          getItemLayout={(_, index) => ({
+            length: width,
+            offset: width * index,
+            index,
+          })}
+          scrollEnabled={false}
+          onLayout={() => setIsReadyToScroll(true)}
+        />
+  
+        <TouchableOpacity style={styles.button} onPress={scrollToNext}>
+          <Text style={styles.buttonText}>
+            {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
+          </Text>
+        </TouchableOpacity>
+        
+        {showFirstGuide && currentIndex === 0 && (
+          <View style={styles.guideOverlay}>
+            <View style={styles.guideBubble}>
+              <Text style={styles.guideText}>이 버튼을 눌러 체크하고 다음 단계로 넘어가세요</Text>
+              <TouchableOpacity onPress={() => setShowFirstGuide(false)} style={styles.guideClose}>
+                <Text style={{ color: '#fff' }}>확인</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </View>
-
-      <FlatList
-        data={ONBOARDINGDATA}
-        renderItem={({ item }) => (
-          <View style={[styles.slide, { width }]}> 
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.description}>{item.description}</Text>
-            <Image source={item.image} style={styles.image} resizeMode="contain" />
-          </View>
-        )}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        bounces={false}
-        keyExtractor={(item) => item.id}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
-        )}
-        onViewableItemsChanged={viewableItemsChanged}
-        viewabilityConfig={viewConfig}
-        ref={slidesRef}
-        initialNumToRender={2}
-        getItemLayout={(_, index) => ({
-          length: width,
-          offset: width * index,
-          index,
-        })}
-        scrollEnabled={false}
-        onLayout={() => setIsReadyToScroll(true)}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={scrollToNext}>
-        <Text style={styles.buttonText}>
-          {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
-        </Text>
-      </TouchableOpacity>
-
-      {showFirstGuide && currentIndex === 0 && (
-        <View style={styles.guideOverlay}>
-          <View style={styles.guideBubble}>
-            <Text style={styles.guideText}>이 버튼을 눌러 체크하고 다음 단계로 넘어가세요</Text>
-            <TouchableOpacity onPress={() => setShowFirstGuide(false)} style={styles.guideClose}>
-              <Text style={{ color: '#fff' }}>확인</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-    </View>
+    </SafeAreaView>
   );
 }
 
