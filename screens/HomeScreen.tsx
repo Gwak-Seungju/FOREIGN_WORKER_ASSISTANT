@@ -13,6 +13,14 @@ export default function HomeScreen(): React.JSX.Element {
     }
   };
 
+  const goChatbot = () => {
+    try {
+      router.replace('/chatbot');
+    } catch (err) {
+      console.log('Error @removeItem: ', err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>메인 화면</Text>
@@ -23,6 +31,12 @@ export default function HomeScreen(): React.JSX.Element {
         onPress={resetOnboarding}
       >
         <Text style={styles.buttonText}>온보딩 다시보기</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={goChatbot}
+      >
+        <Text style={styles.buttonText}>챗봇</Text>
       </TouchableOpacity>
     </View>
   );

@@ -32,7 +32,7 @@ export default function InitialSetupScreen() {
           <CustomDropdown
             selected={country}
             setSelected={(itemValue) => setCountry(itemValue)}
-            options={['필리핀', '베트남', '인도네시아']}
+            options={['필리핀', '태국']}
           />
           <TouchableOpacity
             style={[styles.button, !country && styles.disabled]}
