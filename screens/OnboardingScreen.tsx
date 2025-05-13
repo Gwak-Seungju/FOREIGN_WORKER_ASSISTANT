@@ -2,7 +2,7 @@ import { ONBOARDINGDATA } from '@/constants/onboardingData';
 import Entypo from '@expo/vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewToken
+  ViewToken,
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -24,18 +24,22 @@ export default function OnboardingScreen() {
   const [furthestIndex, setFurthestIndex] = useState(0);
   const [checkedSteps, setCheckedSteps] = useState<number[]>([]);
   const [isReadyToScroll, setIsReadyToScroll] = useState(false);
-  const [showFirstGuide, setShowFirstGuide] = useState(false);
+  const [guideStep, setGuideStep] = useState<number | null>(null);
   const [showExpandedProgress, setShowExpandedProgress] = useState(false);
+  const [highlightLayout, setHighlightLayout] = useState<{x: number; y: number; width: number; height: number} | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef<FlatList>(null);
   const router = useRouter();
+
+  const checkButtonRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
+  const nextButtonRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
+  const progressBarRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
 
   useEffect(() => {
     const checkFirstUse = async () => {
       const shown = await AsyncStorage.getItem('@onboarding_check_guide_shown');
       if (!shown) {
-        setShowFirstGuide(true);
-        await AsyncStorage.setItem('@onboarding_check_guide_shown', 'true');
+        setGuideStep(0);
       }
 
       const savedFurthest = await AsyncStorage.getItem('@onboarding_furthest_index');
@@ -51,6 +55,46 @@ export default function OnboardingScreen() {
     };
     checkFirstUse();
   }, []);
+
+  useLayoutEffect(() => {
+    // measure after layout stabilized
+    let timeout: ReturnType<typeof setTimeout>;
+    if (guideStep === 0 && currentIndex === 0 && checkButtonRef.current) {
+      timeout = setTimeout(() => {
+        checkButtonRef.current?.measureInWindow((x, y, width, height) => {
+          setHighlightLayout({ x, y, width, height });
+        });
+      }, 40);
+    } else if (guideStep === 1 && nextButtonRef.current) {
+      timeout = setTimeout(() => {
+        nextButtonRef.current?.measureInWindow((x, y, width, height) => {
+          setHighlightLayout({ x, y, width, height });
+        });
+      }, 40);
+    } else if (guideStep === 2 && progressBarRef.current) {
+      timeout = setTimeout(() => {
+        progressBarRef.current?.measureInWindow((x, y, width, height) => {
+          setHighlightLayout({ x, y, width, height });
+        });
+      }, 40);
+    } else {
+      setHighlightLayout(null);
+    }
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [guideStep, currentIndex]);
+
+  const onGuideNext = async () => {
+    if (guideStep === null) return;
+    if (guideStep < 2) {
+      setGuideStep(guideStep + 1);
+    } else {
+      // 마지막 단계일 때 저장
+      await AsyncStorage.setItem('@onboarding_check_guide_shown', 'true');
+      setGuideStep(null);
+    }
+  };
 
   const toggleCheck = async () => {
     const key = '@onboarding_read_steps';
@@ -124,6 +168,62 @@ export default function OnboardingScreen() {
           <View style={styles.dimOverlay} />
         </TouchableWithoutFeedback>
         )}
+        {guideStep !== null && highlightLayout && (
+          <>
+            <TouchableWithoutFeedback onPress={() => setGuideStep(null)}>
+              <View style={styles.dimOverlay} />
+            </TouchableWithoutFeedback>
+            <View
+              style={[
+                styles.highlightBox,
+                {
+                  top: highlightLayout.y - 8,
+                  left: highlightLayout.x - 8,
+                  width: highlightLayout.width + 16,
+                  height: highlightLayout.height + 16,
+                },
+              ]}
+            />
+            <View
+              style={[
+                styles.guideBubble,
+                {
+                  position: 'absolute',
+                  top:
+                    highlightLayout.y + highlightLayout.height > Dimensions.get('window').height * 0.6
+                      ? highlightLayout.y - highlightLayout.height- 80 // 위에
+                      : highlightLayout.y + highlightLayout.height + 10, // 아래에
+                  left: highlightLayout.x + highlightLayout.width / 2 - 125,
+                },
+              ]}
+            >
+              {guideStep === 0 && (
+                <>
+                  <Text style={styles.guideText}>{`'체크' 버튼을 눌러 현재 단계를 완료할 수 있습니다.`}</Text>
+                  <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
+                    <Text style={{ color: '#fff' }}>확인</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+              {guideStep === 1 && (
+                <>
+                  <Text style={styles.guideText}>{`'다음' 버튼을 눌러 다음 단계로 이동하세요.`}</Text>
+                  <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
+                    <Text style={{ color: '#fff' }}>다음</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+              {guideStep === 2 && (
+                <>
+                  <Text style={styles.guideText}>{`프로그레스 바를 눌러 원하는 단계로 바로 이동할 수 있습니다.`}</Text>
+                  <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
+                    <Text style={{ color: '#fff' }}>확인</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          </>
+        )}
         <View style={styles.headerContainer}>
           <View style={styles.header}>
             <View style={styles.leftIcon}>
@@ -135,7 +235,7 @@ export default function OnboardingScreen() {
             </View>
             
             <View style={styles.progressWrapper}>
-              <TouchableOpacity onPress={() => setShowExpandedProgress(!showExpandedProgress)}>
+              <TouchableOpacity onPress={() => setShowExpandedProgress(!showExpandedProgress)} ref={progressBarRef}>
                 <View style={showExpandedProgress ? styles.progressBarExpanded : styles.progressBarBackground}>
                   <View style={styles.progressRow}>
                     {ONBOARDINGDATA.map((_, idx) => (
@@ -166,7 +266,7 @@ export default function OnboardingScreen() {
             </View>
                   
             <View style={styles.rightIcon}>
-              <TouchableOpacity onPress={toggleCheck}>
+              <TouchableOpacity onPress={toggleCheck} ref={checkButtonRef}>
                 <Entypo name="check" size={20} color={isChecked ? 'green' : 'gray'} />
               </TouchableOpacity>
             </View>
@@ -194,7 +294,7 @@ export default function OnboardingScreen() {
           onViewableItemsChanged={viewableItemsChanged}
           viewabilityConfig={viewConfig}
           ref={slidesRef}
-          initialNumToRender={2}
+          initialNumToRender={ONBOARDINGDATA.length}
           getItemLayout={(_, index) => ({
             length: width,
             offset: width * index,
@@ -204,22 +304,11 @@ export default function OnboardingScreen() {
           onLayout={() => setIsReadyToScroll(true)}
         />
   
-        <TouchableOpacity style={styles.button} onPress={scrollToNext}>
+        <TouchableOpacity style={styles.button} onPress={scrollToNext} ref={nextButtonRef}>
           <Text style={styles.buttonText}>
             {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
           </Text>
         </TouchableOpacity>
-        
-        {showFirstGuide && currentIndex === 0 && (
-          <View style={styles.guideOverlay}>
-            <View style={styles.guideBubble}>
-              <Text style={styles.guideText}>이 버튼을 눌러 체크하고 다음 단계로 넘어가세요</Text>
-              <TouchableOpacity onPress={() => setShowFirstGuide(false)} style={styles.guideClose}>
-                <Text style={{ color: '#fff' }}>확인</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
       </View>
     </SafeAreaView>
   );
@@ -236,6 +325,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
     zIndex: 1,
   },
+  highlightBox: {
+    position: 'absolute',
+    borderWidth: 2,
+    borderColor: 'red',
+    borderRadius: 8,
+    zIndex: 3,
+  },
   headerContainer: { paddingTop: 10, paddingHorizontal: 20, zIndex: 2 },
   header: { width: '100%', height: 70, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' },
   leftIcon: { position: 'absolute', left: 0, top: 14, zIndex: 2 },
@@ -243,7 +339,7 @@ const styles = StyleSheet.create({
   progressWrapper: { alignItems: 'center', justifyContent: 'center', marginTop: 4, marginBottom: 0 },
   progressBarBackground: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'inherit',
     padding: 8,
     borderRadius: 8,
   },
@@ -273,26 +369,18 @@ const styles = StyleSheet.create({
   image: { width: '80%', height: 220, marginBottom: 16 },
   description: { fontSize: 16, color: '#333', textAlign: 'center' },
   slide: { justifyContent: 'center', alignItems: 'center', padding: 20 },
-  title: { fontSize: 24, marginBottom: 10 },
+  title: { fontSize: 24, marginBottom: 10, textAlign: 'center' },
   button: { backgroundColor: 'black', padding: 16, margin: 24, borderRadius: 8, alignItems: 'center' },
   buttonText: { color: 'white', fontSize: 16 },
-  guideOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 5,
-  },
   guideBubble: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 12,
     maxWidth: 250,
     alignItems: 'center',
+    zIndex: 10,
+    elevation: 5,
+    position: 'absolute',
   },
   guideText: {
     fontSize: 14,
