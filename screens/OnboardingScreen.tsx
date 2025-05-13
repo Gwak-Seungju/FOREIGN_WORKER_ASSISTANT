@@ -1,7 +1,7 @@
 import { ONBOARDINGDATA } from '@/constants/onboardingData';
 import Entypo from '@expo/vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -34,6 +34,9 @@ export default function OnboardingScreen() {
   const checkButtonRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
   const nextButtonRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
   const progressBarRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
+
+  const pathName = usePathname();
+  const isOnboarding = pathName === '/onboarding';
 
   useEffect(() => {
     const checkFirstUse = async () => {
@@ -303,12 +306,22 @@ export default function OnboardingScreen() {
           scrollEnabled={false}
           onLayout={() => setIsReadyToScroll(true)}
         />
-  
-        <TouchableOpacity style={styles.button} onPress={scrollToNext} ref={nextButtonRef}>
-          <Text style={styles.buttonText}>
-            {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
-          </Text>
-        </TouchableOpacity>
+        {/* Button group: vertically stack '다음' and (조건부) '홈으로 가기' */}
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity style={styles.button} onPress={scrollToNext} ref={nextButtonRef}>
+            <Text style={styles.buttonText}>
+              {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
+            </Text>
+          </TouchableOpacity>
+          {isOnboarding && (
+            <TouchableOpacity
+              style={styles.homeButton}
+              onPress={() => router.replace('/')}
+            >
+              <Text style={styles.homeButtonText}>홈으로 가기</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -370,8 +383,34 @@ const styles = StyleSheet.create({
   description: { fontSize: 16, color: '#333', textAlign: 'center' },
   slide: { justifyContent: 'center', alignItems: 'center', padding: 20 },
   title: { fontSize: 24, marginBottom: 10, textAlign: 'center' },
-  button: { backgroundColor: 'black', padding: 16, margin: 24, borderRadius: 8, alignItems: 'center' },
+  buttonGroup: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: 12,
+    marginHorizontal: 24,
+    marginBottom: 24,
+    marginTop: 0,
+  },
+  button: {
+    backgroundColor: 'black',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
   buttonText: { color: 'white', fontSize: 16 },
+  homeButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 16,
+    marginTop: 8,
+  },
+  homeButtonText: {
+    color: '#000',
+    fontSize: 16,
+  },
   guideBubble: {
     backgroundColor: 'white',
     padding: 20,
