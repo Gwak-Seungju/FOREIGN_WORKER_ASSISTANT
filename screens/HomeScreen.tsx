@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen(): React.JSX.Element {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
 
   const resetOnboarding = () => {
     try {
@@ -38,6 +40,23 @@ export default function HomeScreen(): React.JSX.Element {
       >
         <Text style={styles.buttonText}>챗봇</Text>
       </TouchableOpacity>
+      <Text>{t('ask')}</Text>
+      <Button
+        title="English"
+        onPress={() => i18n.changeLanguage('en')}
+      />
+      <Button
+        title="한국어"
+        onPress={() => i18n.changeLanguage('ko')}
+      />
+      <Button
+        title="태국어"
+        onPress={() => i18n.changeLanguage('th')}
+      />
+      <Button
+        title="베트남어"
+        onPress={() => i18n.changeLanguage('vi')}
+      />
     </View>
   );
 }

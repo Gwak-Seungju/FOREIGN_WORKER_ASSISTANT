@@ -6,6 +6,7 @@ import { Redirect } from 'expo-router';
 import * as SystemUI from 'expo-system-ui';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import '../i18n';
 
 export default function Index() {
   const [ready, setReady] = useState(false);
