@@ -1,20 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { StyleSheet } from 'react-native';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={({ }) => ({
         headerShown: false,
-        // headerTitle: 'WorkerBridge',
-        //headerTitleStyle: layoutStyles.headerTitle,
-        //headerBackgroundContainerStyle: isModeTab ? layoutStyles.modeTabHeaderContainer : layoutStyles.headerContainer,
-        // headerRight: () => <SettingButton />,r
-        //tabBarLabelStyle: layoutStyles.tabBarLabel,
-        //tabBarIconStyle: layoutStyles.tabBarIcon,
-        //tabBarActiveTintColor: '#fff',
-        //tabBarInactiveTintColor: '#63636E',
       })}
     >
       <Tabs.Screen
@@ -56,12 +47,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  tabBar: {
-    height: 80,
-  },
-  header: {
-    display: 'none'
-  }
-})

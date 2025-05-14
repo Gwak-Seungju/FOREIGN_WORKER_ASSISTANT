@@ -2,16 +2,8 @@ import { useCountryStore } from '@/stores/countryStore';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-const costItems = [
-  { id: 'passportFee', label: '여권 발급 비용' },
-  { id: 'documentFee', label: '서류 발급 비용' },
-  { id: 'medicalFee', label: '종합 검진 비용' },
-  { id: 'visaFee', label: '비자 신청 수수료' },
-  { id: 'epsExamFee', label: 'EPS-TOPIK 응시료' },
-  { id: 'airfare', label: '항공료' },
-];
 
 interface EstimateParams {
   passport: boolean;
@@ -67,6 +59,17 @@ export default function CalculatorScreen() {
   const router = useRouter();
   const countryCode = nationality === '태국' ? 'TH' : 'VN';
 
+  const { t } = useTranslation();
+
+  const costItems = [
+    { id: 'passportFee', label: t('calculator.passportFee') },
+    { id: 'documentFee', label: t('calculator.documentFee') },
+    { id: 'medicalFee', label: t('calculator.medicalFee') },
+    { id: 'visaFee', label: t('calculator.visaFee') },
+    { id: 'epsExamFee', label: t('calculator.epsExamFee') },
+    { id: 'airfare', label: t('calculator.airfare') },
+  ];
+
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [result, setResult] = useState<EstimateResponse | null>(null);
 
@@ -98,21 +101,32 @@ export default function CalculatorScreen() {
         <Text style={{ fontSize: 24 }}>←</Text>  
       </TouchableOpacity>
       <ScrollView style={styles.fullScreen} contentContainerStyle={styles.container}>
-        <Text style={styles.title}>취업 준비 비용 계산</Text>
-        <Text style={styles.description}>한국 취업 준비를 위해 소비되는 비용을 대략적으로 계산해드립니다.</Text>
+        <Text style={styles.title}>{t('calculator.title')}</Text>
+        <Text style={styles.description}>{t('calculator.description')}</Text>
 
         {costItems.map(item => {
           const feeValue = result?.detail ? result.detail[item.id as keyof detailCost] : null;
+          const checked = selectedItems.includes(item.id);
           return (
             <TouchableOpacity
               key={item.id}
-              style={[styles.checkboxRow, selectedItems.includes(item.id) && styles.checked]}
+              style={[styles.checkboxRow, checked && styles.checked]}
               onPress={() => toggleItem(item.id)}
             >
-              <Text style={styles.checkbox}>{selectedItems.includes(item.id) ? '✅' : '⬜️'}</Text>
+              <View
+                style={[
+                  styles.checkboxBase,
+                  checked ? styles.checkboxChecked : styles.checkboxUnchecked,
+                ]}
+              >
+                {checked && <Text style={styles.checkmark}>✓</Text>}
+              </View>
               <Text style={styles.label}>{item.label}</Text>
-              {selectedItems.includes(item.id) && feeValue !== null && (
-                <Text style={styles.feeText}>{feeValue.toLocaleString()}{nationality === '태국' ? '฿' : '₫'}</Text>
+              {checked && feeValue !== null && (
+                <Text style={styles.feeText}>
+                  {feeValue.toLocaleString()}
+                  {nationality === '태국' ? '฿' : '₫'}
+                </Text>
               )}
             </TouchableOpacity>
           );
@@ -122,8 +136,10 @@ export default function CalculatorScreen() {
       {result && (
         <View style={styles.fixedEstimateContainer}>
           <Text style={styles.estimateLabel}>
-            약 {result.totalCost.toLocaleString()}
-            {nationality === '태국' ? '฿' : '₫'} 예상
+            {t('calculator.estimatedCost', {
+              cost: result.totalCost.toLocaleString(),
+              currency: nationality === '태국' ? '฿' : '₫',
+            })}
           </Text>
         </View>
       )}
@@ -168,12 +184,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    paddingVertical: 6,
   },
   checked: {
     opacity: 0.8,
   },
-  checkbox: {
-    fontSize: 20,
+  checkboxBase: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxUnchecked: {
+    borderColor: '#007aff',
+  },
+  checkboxChecked: {
+    backgroundColor: '#007aff',
+    borderColor: '#007aff',
+  },
+  checkmark: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    lineHeight: 16,
   },
   label: {
     fontSize: 16,

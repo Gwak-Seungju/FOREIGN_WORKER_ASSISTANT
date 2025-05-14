@@ -1,5 +1,28 @@
 {
-  "hello": "Xin chào",
-  "send": "Gửi",
-  "ask": "Bạn muốn hỏi điều gì?"
+  "home": {
+    "title": "WorkerBridge",
+    "subtitle": "Cầu nối đến sự nghiệp tại Hàn Quốc",
+    "description": "Chúng tôi hỗ trợ bạn tiếp cận thị trường việc làm Hàn Quốc, từ viết CV đến mẹo phỏng vấn.",
+    "calculator": "Công cụ tính chi phí",
+    "onboarding": "Hướng dẫn danh sách kiểm tra",
+    "chatbot": "Trợ lý chatbot"
+  },
+  "language": {
+    "en": "Tiếng Anh",
+    "ko": "Tiếng Hàn",
+    "th": "Tiếng Thái",
+    "vi": "Tiếng Việt"
+  },
+  "calculator": {
+    "title": "Tính chi phí chuẩn bị đi làm",
+    "description": "Tính toán sơ bộ chi phí cần thiết để chuẩn bị làm việc tại Hàn Quốc.",
+    "passportFee": "Phí cấp hộ chiếu",
+    "documentFee": "Phí cấp giấy tờ",
+    "medicalFee": "Phí khám sức khỏe tổng quát",
+    "visaFee": "Phí xin visa",
+    "epsExamFee": "Phí thi EPS-TOPIK",
+    "airfare": "Chi phí vé máy bay",
+    "estimatedCost": "Khoảng {{cost}}{{currency}} dự kiến"
+  },
+  "ask": "Hãy đặt câu hỏi"
 }

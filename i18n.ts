@@ -7,8 +7,8 @@ import th from './locales/th.json';
 import vi from './locales/vi.json';
 
 i18n.use(initReactI18next).init({
-  fallbackLng: 'ko',
-  lng: 'ko', // 초기 언어 (예: 한국어)
+  fallbackLng: 'en',
+  lng: 'en', // 초기 언어 (예: 한국어)
   resources: {
     ko: { translation: ko },
     en: { translation: en },

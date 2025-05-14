@@ -1,5 +1,28 @@
 {
-  "hello": "Hello",
-  "ask": "What would you like to ask?",
-  "send": "Send"
+  "home": {
+    "title": "WorkerBridge",
+    "subtitle": "Your gateway to a career in Korea",
+    "description": "We help you navigate the Korean job market—from writing your CV to interview tips.",
+    "calculator": "Cost Estimator",
+    "onboarding": "Checklist Guide",
+    "chatbot": "Chatbot Support"
+  },
+  "language": {
+    "en": "English",
+    "ko": "Korean",
+    "th": "Thai",
+    "vi": "Vietnamese"
+  },
+  "calculator": {
+    "title": "Employment Preparation Cost Estimator",
+    "description": "Estimate the approximate costs required to prepare for working in Korea.",
+    "passportFee": "Passport issuance fee",
+    "documentFee": "Document issuance fee",
+    "medicalFee": "Medical check-up fee",
+    "visaFee": "Visa application fee",
+    "epsExamFee": "EPS-TOPIK exam fee",
+    "airfare": "Airfare",
+    "estimatedCost": "Estimated around {{cost}}{{currency}}"
+  },
+  "ask": "Ask a question"
 }
