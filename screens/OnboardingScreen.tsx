@@ -1,5 +1,7 @@
 import { ONBOARDINGDATA } from '@/constants/onboardingData';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePathname, useRouter } from 'expo-router';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -34,6 +36,7 @@ export default function OnboardingScreen() {
   const checkButtonRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
   const nextButtonRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
   const progressBarRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
+  const calculatorRef = useRef<React.ComponentRef<typeof TouchableOpacity>>(null);
 
   const pathName = usePathname();
   const isOnboarding = pathName === '/onboarding';
@@ -61,36 +64,30 @@ export default function OnboardingScreen() {
 
   useLayoutEffect(() => {
     // measure after layout stabilized
-    let timeout: ReturnType<typeof setTimeout>;
-    if (guideStep === 0 && currentIndex === 0 && checkButtonRef.current) {
-      timeout = setTimeout(() => {
+    if (guideStep === 0 && checkButtonRef.current) {
         checkButtonRef.current?.measureInWindow((x, y, width, height) => {
           setHighlightLayout({ x, y, width, height });
         });
-      }, 40);
     } else if (guideStep === 1 && nextButtonRef.current) {
-      timeout = setTimeout(() => {
         nextButtonRef.current?.measureInWindow((x, y, width, height) => {
           setHighlightLayout({ x, y, width, height });
         });
-      }, 40);
     } else if (guideStep === 2 && progressBarRef.current) {
-      timeout = setTimeout(() => {
         progressBarRef.current?.measureInWindow((x, y, width, height) => {
           setHighlightLayout({ x, y, width, height });
         });
-      }, 40);
+    } else if (guideStep === 3 && calculatorRef.current) {
+        calculatorRef.current?.measureInWindow((x, y, width, height) => {
+          setHighlightLayout({ x, y, width, height });
+        });
     } else {
       setHighlightLayout(null);
     }
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
   }, [guideStep, currentIndex]);
 
   const onGuideNext = async () => {
     if (guideStep === null) return;
-    if (guideStep < 2) {
+    if (guideStep < 3) {
       setGuideStep(guideStep + 1);
     } else {
       // 마지막 단계일 때 저장
@@ -163,6 +160,22 @@ export default function OnboardingScreen() {
 
   const isChecked = checkedSteps.includes(currentIndex);
 
+  // Compute safeTop and safeLeft for the guide bubble, based on highlightLayout and screen bounds
+  let safeTop = 0, safeLeft = 0;
+  if (guideStep !== null && highlightLayout) {
+    const screenHeight = Dimensions.get('window').height;
+    const screenWidth = Dimensions.get('window').width;
+    const bubbleHeight = 100;
+    const bubbleWidth = 250;
+    const bubbleTop = highlightLayout.y + highlightLayout.height;
+    const bubbleLeft = highlightLayout.x + highlightLayout.width / 2 - bubbleWidth / 2;
+    safeTop =
+      bubbleTop + bubbleHeight > screenHeight
+        ? highlightLayout.y - bubbleHeight - 10
+        : bubbleTop + 10;
+    safeLeft = Math.min(Math.max(bubbleLeft, 10), screenWidth - bubbleWidth - 10);
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
@@ -191,12 +204,8 @@ export default function OnboardingScreen() {
               style={[
                 styles.guideBubble,
                 {
-                  position: 'absolute',
-                  top:
-                    highlightLayout.y + highlightLayout.height > Dimensions.get('window').height * 0.6
-                      ? highlightLayout.y - highlightLayout.height- 80 // 위에
-                      : highlightLayout.y + highlightLayout.height + 10, // 아래에
-                  left: highlightLayout.x + highlightLayout.width / 2 - 125,
+                  top: safeTop,
+                  left: safeLeft,
                 },
               ]}
             >
@@ -212,13 +221,21 @@ export default function OnboardingScreen() {
                 <>
                   <Text style={styles.guideText}>{`'다음' 버튼을 눌러 다음 단계로 이동하세요.`}</Text>
                   <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
-                    <Text style={{ color: '#fff' }}>다음</Text>
+                    <Text style={{ color: '#fff' }}>확인</Text>
                   </TouchableOpacity>
                 </>
               )}
               {guideStep === 2 && (
                 <>
                   <Text style={styles.guideText}>{`프로그레스 바를 눌러 원하는 단계로 바로 이동할 수 있습니다.`}</Text>
+                  <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
+                    <Text style={{ color: '#fff' }}>확인</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+              {guideStep === 3 && (
+                <>
+                  <Text style={styles.guideText}>{`비용 계산기를 통해 취업 준비에 드는 대략적인 비용을 계산할 수 있습니다.`}</Text>
                   <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
                     <Text style={{ color: '#fff' }}>확인</Text>
                   </TouchableOpacity>
@@ -306,6 +323,12 @@ export default function OnboardingScreen() {
           scrollEnabled={false}
           onLayout={() => setIsReadyToScroll(true)}
         />
+        <TouchableOpacity style={styles.calculator} ref={calculatorRef}>
+          <Ionicons name="calculator" size={36} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.question} onPress={() => setGuideStep(0)}>
+          <AntDesign name="questioncircleo" size={48} color="black" />
+        </TouchableOpacity>
         {/* Button group: vertically stack '다음' and (조건부) '홈으로 가기' */}
         <View style={styles.buttonGroup}>
           <TouchableOpacity style={styles.button} onPress={scrollToNext} ref={nextButtonRef}>
@@ -420,11 +443,15 @@ const styles = StyleSheet.create({
     zIndex: 10,
     elevation: 5,
     position: 'absolute',
+    // Add safeTop and safeLeft for position
+    top: 0,
+    left: 0,
   },
   guideText: {
     fontSize: 14,
     color: '#333',
     marginBottom: 12,
+    // flexWrap: 'wrap',
   },
   guideClose: {
     backgroundColor: 'black',
@@ -443,5 +470,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#555',
     textAlign: 'center',
+  },
+  calculator: {
+    position: 'absolute',
+    bottom: 200,
+    right: 24,
+    borderWidth: 3,
+    borderRadius: 50,
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  question: {
+    position: 'absolute',
+    bottom: 200,
+    left: 24,
   },
 });
