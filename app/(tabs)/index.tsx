@@ -19,15 +19,22 @@ export default function TabLayout() {
     { label: 'Tiếng Việt', value: 'vi' },
   ]);
 
-  const [initialSetupDone, setInitialSetupDone] = useState(false);
+  const [initialSetupDone, setInitialSetupDone] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const isInitialSetup = AsyncStorage.getItem('@initial_setup_complete');
-    setInitialSetupDone(!!isInitialSetup);
+    const checkInitialSetup = async () => {
+      const isInitialSetup = await AsyncStorage.getItem('@initial_setup_complete');
+      setInitialSetupDone(!!isInitialSetup);
+    };
+    checkInitialSetup();
   }, []);
 
-  if (!initialSetupDone) {
+  if (initialSetupDone === false) {
     return <Redirect href="/initial-setup" />;
+  }
+
+  if (initialSetupDone === null) {
+    return null;
   }
 
   return (
