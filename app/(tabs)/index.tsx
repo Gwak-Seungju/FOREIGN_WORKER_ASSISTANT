@@ -1,10 +1,11 @@
 import i18n from '@/i18n';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Redirect, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { LanguageDropdown } from '../initial-setup';
 
 export default function TabLayout() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function TabLayout() {
       const language = await AsyncStorage.getItem('language');
       if (language) {
         setLanguage(language);
+        i18n.changeLanguage(language);
       }
     };
     checkInitialSetup();
@@ -49,60 +51,37 @@ export default function TabLayout() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <DropDownPicker
-        open={open}
-        value={language}
-        items={items}
-        setOpen={setOpen}
-        setValue={(callback) => {
-          const newLang = callback(language);
-          setLanguage(newLang);
-          i18n.changeLanguage(newLang);
-        }}
-        setItems={setItems}
-        containerStyle={{
-          width: 120,
-          position: 'absolute',
-          top: 12,
-          right: 12,
-          zIndex: 10,
-        }}
-        style={{
-          minHeight: 36,
-          borderRadius: 8,
-        }}
-        dropDownContainerStyle={{
-          position: 'absolute',
-          top: 35,
-          right: 0,
-          width: 120,
-          zIndex: 10,
-        }}
-        listItemContainerStyle={{
-          height: 36
-        }}
-        textStyle={{
-          fontSize: 14,
-        }}
-      />
+      <LanguageDropdown value={language} setValue={setLanguage} />
       <Text style={styles.title}>{t('home.title')}</Text>
       <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
       <Text style={styles.description}>{t('home.description')}</Text>
 
-      <View style={styles.featureRow}>
-        <TouchableOpacity style={styles.circle} onPress={() => router.push('/calculator')}>
-          <Image source={require('@/assets/images/adaptive-icon.png')} style={styles.icon} />
-          <Text style={styles.label}>{t('home.calculator')}</Text>
+      <View style={styles.featureGrid}>
+        <TouchableOpacity style={styles.featureCard} onPress={() => router.push('/calculator')}>
+          <View style={[styles.featureIcon, { backgroundColor: '#E0F0FF' }]}>
+            <Ionicons name="calculator" size={40} color={'#dadada'} />
+          </View>
+          <Text style={styles.featureTitle}>{t('home.calculator')}</Text>
+          <Text style={styles.featureSubtitle}>{t('home.calculator_subtitle')}</Text>
+          <Text style={styles.featureDescription}>{t('home.calculator_description')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.circle} onPress={() => router.push('/onboarding')}>
-          <Image source={require('@/assets/images/adaptive-icon.png')} style={styles.icon} />
-          <Text style={styles.label}>{t('home.onboarding')}</Text>
+        <TouchableOpacity style={styles.featureCard} onPress={() => router.push('/onboarding')}>
+          <View style={[styles.featureIcon, { backgroundColor: '#E6F7E6' }]}>
+            <Ionicons name="checkmark-done" size={40} color={'#dadada'} />
+          </View>
+          <Text style={styles.featureTitle}>{t('home.onboarding')}</Text>
+          <Text style={styles.featureSubtitle}>{t('home.onboarding_subtitle')}</Text>
+          <Text style={styles.featureDescription}>{t('home.onboarding_description')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.circle} onPress={() => router.push('/chatbot')}>
-          <Image source={require('@/assets/images/adaptive-icon.png')} style={styles.icon} />
-          <Text style={styles.label}>{t('home.chatbot')}</Text>
+        <TouchableOpacity style={[styles.featureCard, { width: '100%' }]} onPress={() => router.push('/chatbot')}>
+          <View style={[styles.featureIcon, { backgroundColor: '#FFF2CC' }]}>
+          <Ionicons name="chatbubble-ellipses" size={40} color={'#dadada'} />
+          </View>
+          <Text style={styles.featureTitle}>{t('home.chatbot')}</Text>
+          <Text style={styles.featureSubtitle}>{t('home.chatbot_subtitle')}</Text>
+          <Text style={styles.featureDescription}>{t('home.chatbot_description')}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -140,6 +119,45 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 24,
     color: '#333',
+  },
+  featureGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 20,
+    columnGap: 12,
+  },
+  featureCard: {
+    width: '47%',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  featureIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  featureSubtitle: {
+    fontSize: 13,
+    color: '#000',
+  },
+  featureDescription: {
+    fontSize: 12,
+    color: '#666',
   },
   featureRow: {
     gap: 20,

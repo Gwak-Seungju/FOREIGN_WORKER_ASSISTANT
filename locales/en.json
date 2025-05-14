@@ -30,8 +30,14 @@
     "subtitle": "Your gateway to a career in Korea",
     "description": "We help you navigate the Korean job market—from writing your CV to interview tips.",
     "calculator": "Cost Estimator",
+    "calculator_subtitle": "Estimate Job Preparation Cost",
+    "calculator_description": "This service helps estimate the approximate cost needed for preparing employment in Korea.",
     "onboarding": "Checklist Guide",
-    "chatbot": "Chatbot Support"
+    "onboarding_subtitle": "Visa and Employment Process",
+    "onboarding_description": "Provides step-by-step guidance on the procedures and documents required for foreigners preparing to work in Korea by visa type.",
+    "chatbot": "Chatbot Support",
+    "chatbot_subtitle": "AI Counseling in Your Language",
+    "chatbot_description": "Using an NLP model, this service provides multilingual support to help foreign workers consult about visas, employment, and life in Korea in their native language."
   },
   "language": {
     "en": "English",

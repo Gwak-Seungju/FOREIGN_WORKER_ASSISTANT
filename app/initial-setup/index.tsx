@@ -7,9 +7,13 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
-function LanguageDropdown() {
-  const [value, setValue] = useState<string | null>(null);
-
+export function LanguageDropdown({
+  value,
+  setValue
+}: {
+  value: string | null,
+  setValue: React.Dispatch<React.SetStateAction<string | null>> | React.Dispatch<React.SetStateAction<string>>
+}) {
   const items = [
     { label: '한국어', value: 'ko' },
     { label: 'English', value: 'en' },
@@ -41,6 +45,7 @@ export default function InitialSetupScreen() {
   const [country, setCountry] = useState('');
   const [hasJob, setHasJob] = useState<boolean | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [value, setValue] = useState<string | null>(null);
   const [selectedVisa, setSelectedVisa] = useState<string | null>(null);
   const [showVisaModal, setShowVisaModal] = useState(false);
   const router = useRouter();
@@ -73,7 +78,7 @@ export default function InitialSetupScreen() {
             source={require('@/assets/images/globe.png')} 
             style={styles.image}
           />
-          <LanguageDropdown />
+          <LanguageDropdown value={value} setValue={setValue}/>
           <View style={styles.countryDropdown}>
             <CustomDropdown
               items={items}

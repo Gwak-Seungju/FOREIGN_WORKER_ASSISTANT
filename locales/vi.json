@@ -30,8 +30,14 @@
     "subtitle": "Cầu nối đến sự nghiệp tại Hàn Quốc",
     "description": "Chúng tôi hỗ trợ bạn tiếp cận thị trường việc làm Hàn Quốc, từ viết CV đến mẹo phỏng vấn.",
     "calculator": "Công cụ tính chi phí",
+    "calculator_subtitle": "Ước tính chi phí chuẩn bị đi làm",
+    "calculator_description": "Dịch vụ này giúp bạn ước tính sơ bộ chi phí cần thiết để chuẩn bị làm việc tại Hàn Quốc.",
     "onboarding": "Hướng dẫn danh sách kiểm tra",
-    "chatbot": "Trợ lý chatbot"
+    "onboarding_subtitle": "Hướng dẫn thủ tục xin visa và làm việc",
+    "onboarding_description": "Hướng dẫn từng bước về các thủ tục và hồ sơ cần thiết cho người lao động nước ngoài theo từng loại visa khi chuẩn bị làm việc tại Hàn Quốc.",
+    "chatbot": "Trợ lý chatbot",
+    "chatbot_subtitle": "Tư vấn AI bằng tiếng mẹ đẻ",
+    "chatbot_description": "Sử dụng mô hình xử lý ngôn ngữ tự nhiên (NLP), dịch vụ hỗ trợ đa ngôn ngữ giúp người lao động nước ngoài dễ dàng tư vấn về visa, công việc và cuộc sống tại Hàn Quốc bằng tiếng mẹ đẻ."
   },
   "language": {
     "en": "Tiếng Anh",

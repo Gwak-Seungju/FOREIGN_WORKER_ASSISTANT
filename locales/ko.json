@@ -28,10 +28,16 @@
   "home": {
     "title": "워커브릿지",
     "subtitle": "한국 취업을 위한 첫걸음",
-    "description": "이력서 작성부터 면접 준비까지, 한국 취업 시장을 탐색할 수 있도록 도와드릴게요.",
+    "description": "한국 생활에 잘 적응할 수 있도록 도와드릴게요.",
     "calculator": "비용 계산기",
+    "calculator_subtitle": "취업 과정 비용 계산",
+    "calculator_description": "한국 취업 준비를 위해 소비되는 비용을 대략적으로 계산해드리는 서비스입니다.",
     "onboarding": "체크리스트 가이드",
-    "chatbot": "챗봇 상담"
+    "onboarding_subtitle": "비자 및 취업 절차 안내",
+    "onboarding_description": "외국인 노동자가 한국 취업을 준비할 때 필요한 절차와 서류를 비자 유형별로 단계적으로 안내하는 서비스입니다.",
+    "chatbot": "챗봇 상담",
+    "chatbot_subtitle": "모국어 기반 챗봇/AI 상담",
+    "chatbot_description": "자연어 처리 모델을 활용해 외국인 노동자가 모국어로 비자, 취업, 생활 정보 등을 상담받을 수 있는 다국어 지원 서비스를 제공합니다."
   },
   "language": {
     "en": "영어",
