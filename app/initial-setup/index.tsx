@@ -37,7 +37,7 @@ export default function InitialSetupScreen() {
               setCountry(itemValue);
               setNationality(itemValue);
             }}
-            options={['필리핀', '태국']}
+            options={['베트남', '태국']}
           />
           <TouchableOpacity
             style={[styles.button, !country && styles.disabled]}

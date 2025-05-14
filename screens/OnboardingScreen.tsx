@@ -1,4 +1,6 @@
+import type { OnboardingItem } from '@/constants/onboardingData';
 import { ONBOARDINGDATA } from '@/constants/onboardingData';
+import { useCountryStore } from '@/stores/countryStore';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -10,18 +12,20 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Linking,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewToken,
+  ViewToken
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
 export default function OnboardingScreen() {
+  const { nationality } = useCountryStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [furthestIndex, setFurthestIndex] = useState(0);
   const [checkedSteps, setCheckedSteps] = useState<number[]>([]);
@@ -137,18 +141,13 @@ export default function OnboardingScreen() {
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
-  const completeOnboarding = async () => {
-    await AsyncStorage.setItem('@onboarding_complete', 'true');
-    router.replace('/');
-  };
-
   const scrollToNext = () => {
     const nextIndex = currentIndex + 1;
     if (nextIndex < ONBOARDINGDATA.length && isReadyToScroll) {
       const offset = width * nextIndex;
       slidesRef.current?.scrollToOffset({ offset, animated: true });
     } else if (nextIndex >= ONBOARDINGDATA.length) {
-      completeOnboarding();
+      router.replace('/');
     }
   };
 
@@ -299,11 +298,65 @@ export default function OnboardingScreen() {
                   
         <FlatList
           data={ONBOARDINGDATA}
-          renderItem={({ item }) => (
-            <View style={[styles.slide, { width }]}> 
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.description}>{item.description}</Text>
+          renderItem={({ item }: { item: OnboardingItem}) => (
+            <View style={[styles.slide, { width }]}>
+              <Text style={[styles.title]}>{item.title}</Text>
+              {(item.checklist && item.id !== '11') && (
+                <View style={{ alignItems: 'center', width: '100%', gap: 12 }}>
+                  {item.checklist.type === 'checkbox'
+                  ? item.checklist.items.map((subItem, i) => (
+                      <View key={i} style={styles.checklistRow}>
+                        <Entypo name="check" size={16} color="gray" />
+                        <Text style={styles.checklistText}>{subItem.text}</Text>
+                      </View>
+                    ))
+                  : item.checklist.items.map((subItem, i) => (
+                      <View key={i} style={styles.checklistRow}>
+                        <Text style={styles.checklistText}>{i + 1}.</Text>
+                        <Text style={styles.checklistText}>{subItem.text}</Text>
+                      </View>
+                    ))}
+                </View>
+              )}
               <Image source={item.image} style={styles.image} resizeMode="contain" />
+              {(item.checklist && item.id === '11') && (
+                <View style={{ alignItems: 'center', width: '100%', gap: 12 }}>
+                {item.checklist.items.map((subItem, i) => (
+                  <View key={i} style={[styles.checklistRow, { justifyContent: 'center'}]}>
+                    <Entypo name="check" size={16} color="gray" />
+                    <Text style={styles.checklistText}>{subItem.text}</Text>
+                  </View>
+                ))}
+                </View>
+              )}
+              {item.relatedLink &&
+                item.relatedLink.filter(
+                  (linkItem) => !linkItem.country || linkItem.country === nationality
+                ).length > 0 && (
+                <View style={{ width: '100%', gap: 8, marginTop: 12 }}>
+                  {item.relatedLink
+                    .filter(
+                      (linkItem) => !linkItem.country || linkItem.country === nationality
+                    )
+                    .map((linkItem, idx) => (
+                      <TouchableOpacity
+                        key={idx}
+                        onPress={() => Linking.openURL(linkItem.link)}
+                        style={{
+                          padding: 12,
+                          backgroundColor: '#f0f0f0',
+                          borderRadius: 8,
+                          borderWidth: 1,
+                          borderColor: '#ccc',
+                        }}
+                      >
+                        <Text style={{ color: '#007AFF', textAlign: 'center' }}>
+                          {linkItem.title}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                </View>
+              )}
             </View>
           )}
           horizontal
@@ -399,9 +452,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   image: { width: '80%', height: 220, marginBottom: 16 },
-  description: { fontSize: 16, color: '#333', textAlign: 'center' },
-  slide: { justifyContent: 'flex-start', alignItems: 'center', padding: 20 },
-  title: { fontSize: 24, marginBottom: 10, textAlign: 'center' },
+  slide: { justifyContent: 'center', alignItems: 'center', padding: 20, gap: 16 },
+  title: {
+    fontSize: 28,
+    marginBottom: 20,
+    textAlign: 'center',
+    flexWrap: 'wrap',
+  },
   buttonGroup: {
     flexDirection: 'column',
     alignItems: 'stretch',
@@ -483,4 +540,16 @@ const styles = StyleSheet.create({
     bottom: 100,
     left: 24,
   },
+  checklistRow: {
+    flexDirection: 'row',
+    marginVertical: 8,
+    width: '100%',
+    gap: 8,
+  },
+  checklistText: {
+    fontSize: 16,
+    flexWrap: 'wrap',
+  }
 });
+
+  

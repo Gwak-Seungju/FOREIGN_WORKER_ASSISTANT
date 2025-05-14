@@ -1,6 +1,7 @@
 import i18n from '@/i18n';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Redirect, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -8,6 +9,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export default function TabLayout() {
   const router = useRouter();
   const { t } = useTranslation();
+  
   const [open, setOpen] = useState(false);
   const [language, setLanguage] = useState('en');
   const [items, setItems] = useState([
@@ -16,6 +18,17 @@ export default function TabLayout() {
     { label: 'ไทย', value: 'th' },
     { label: 'Tiếng Việt', value: 'vi' },
   ]);
+
+  const [initialSetupDone, setInitialSetupDone] = useState(false);
+
+  useEffect(() => {
+    const isInitialSetup = AsyncStorage.getItem('@initial_setup_complete');
+    setInitialSetupDone(!!isInitialSetup);
+  }, []);
+
+  if (!initialSetupDone) {
+    return <Redirect href="/initial-setup" />;
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
