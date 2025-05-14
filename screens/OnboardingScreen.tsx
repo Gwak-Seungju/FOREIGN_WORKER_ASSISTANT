@@ -170,10 +170,14 @@ export default function OnboardingScreen() {
     const bubbleWidth = 250;
     const bubbleTop = highlightLayout.y + highlightLayout.height;
     const bubbleLeft = highlightLayout.x + highlightLayout.width / 2 - bubbleWidth / 2;
-    safeTop =
-      bubbleTop + bubbleHeight > screenHeight
-        ? highlightLayout.y - bubbleHeight - 10
-        : bubbleTop + 10;
+
+    // Improved dynamic positioning: Place above if in bottom half, else below
+    const isBottomHalf = highlightLayout.y > screenHeight / 2;
+
+    safeTop = isBottomHalf
+      ? highlightLayout.y - bubbleHeight - 30
+      : bubbleTop + 10;
+
     safeLeft = Math.min(Math.max(bubbleLeft, 10), screenWidth - bubbleWidth - 10);
   }
 
@@ -336,14 +340,6 @@ export default function OnboardingScreen() {
               {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
             </Text>
           </TouchableOpacity>
-          {isOnboarding && (
-            <TouchableOpacity
-              style={styles.homeButton}
-              onPress={() => router.replace('/')}
-            >
-              <Text style={styles.homeButtonText}>홈으로 가기</Text>
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     </SafeAreaView>
@@ -473,7 +469,7 @@ const styles = StyleSheet.create({
   },
   calculator: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 100,
     right: 24,
     borderWidth: 3,
     borderRadius: 50,
@@ -484,7 +480,7 @@ const styles = StyleSheet.create({
   },
   question: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 100,
     left: 24,
   },
 });
