@@ -1,4 +1,5 @@
 import CustomDropdown from '@/components/CustomDropdown';
+import { useCountryStore } from '@/stores/countryStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -10,6 +11,7 @@ export default function InitialSetupScreen() {
   const [hasJob, setHasJob] = useState<boolean | null>(null);
   const [selectedVisa, setSelectedVisa] = useState<string | null>(null);
   const router = useRouter();
+  const { setNationality } = useCountryStore();
 
   const handleVisaSelect = async (visa: string) => {
     setSelectedVisa(visa);
@@ -31,7 +33,10 @@ export default function InitialSetupScreen() {
           />
           <CustomDropdown
             selected={country}
-            setSelected={(itemValue) => setCountry(itemValue)}
+            setSelected={(itemValue) => {
+              setCountry(itemValue);
+              setNationality(itemValue);
+            }}
             options={['필리핀', '태국']}
           />
           <TouchableOpacity

@@ -323,7 +323,7 @@ export default function OnboardingScreen() {
           scrollEnabled={false}
           onLayout={() => setIsReadyToScroll(true)}
         />
-        <TouchableOpacity style={styles.calculator} ref={calculatorRef}>
+        <TouchableOpacity style={styles.calculator} ref={calculatorRef} onPress={() => router.push('/calculator')}>
           <Ionicons name="calculator" size={36} color="black" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.question} onPress={() => setGuideStep(0)}>

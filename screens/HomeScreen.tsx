@@ -9,7 +9,7 @@ export default function HomeScreen(): React.JSX.Element {
 
   const resetOnboarding = () => {
     try {
-      router.replace('/onboarding');
+      router.push('/onboarding');
     } catch (err) {
       console.log('Error @removeItem: ', err);
     }
@@ -17,7 +17,7 @@ export default function HomeScreen(): React.JSX.Element {
 
   const goChatbot = () => {
     try {
-      router.replace('/chatbot');
+      router.push('/chatbot');
     } catch (err) {
       console.log('Error @removeItem: ', err);
     }
