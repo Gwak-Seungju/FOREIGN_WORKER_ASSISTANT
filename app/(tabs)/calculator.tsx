@@ -55,9 +55,9 @@ const fetchEstimatedCost = async (
 };
 
 export default function CalculatorScreen() {
-  const { nationality } = useCountryStore();
+  const { country } = useCountryStore();
   const router = useRouter();
-  const countryCode = nationality === '태국' ? 'TH' : 'VN';
+  const countryCode = country === '태국' ? 'TH' : 'VN';
 
   const { t } = useTranslation();
 
@@ -125,7 +125,7 @@ export default function CalculatorScreen() {
               {checked && feeValue !== null && (
                 <Text style={styles.feeText}>
                   {feeValue.toLocaleString()}
-                  {nationality === '태국' ? '฿' : '₫'}
+                  {country === '태국' ? '฿' : '₫'}
                 </Text>
               )}
             </TouchableOpacity>
@@ -138,7 +138,7 @@ export default function CalculatorScreen() {
           <Text style={styles.estimateLabel}>
             {t('calculator.estimatedCost', {
               cost: result.totalCost.toLocaleString(),
-              currency: nationality === '태국' ? '฿' : '₫',
+              currency: country === '태국' ? '฿' : '₫',
             })}
           </Text>
         </View>

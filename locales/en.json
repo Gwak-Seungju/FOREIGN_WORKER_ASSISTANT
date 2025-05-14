@@ -1,4 +1,30 @@
 {
+  "initialSetup": {
+    "question1": "Which country are you from?",
+    "question2": "Are you already employed in Korea?",
+    "question3": "Which visa do you plan to obtain?",
+    "modalTitle": {
+      "hasJob": "You're already working in Korea",
+      "noJob": "You're not working in Korea yet"
+    },
+    "modalSubtitle": {
+      "hasJob": "We’ll help you adjust to life in Korea!",
+      "noJob": "We’ll guide you from the beginning!"
+    },
+    "moveToMain": "Go to Main Page",
+    "moveToNext": "Continue to Next Step",
+    "visaE9": "E-9 (Non-Korean Foreign National)",
+    "visaH2": "H-2 (Ethnic Korean) - Coming Soon",
+    "visaModalTitle": "Great! You selected E-9 visa",
+    "visaModalSubtitle": "We will now take you through the onboarding steps for your journey."
+  },
+  "common": {
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "proceed": "Proceed"
+  },
   "home": {
     "title": "WorkerBridge",
     "subtitle": "Your gateway to a career in Korea",
@@ -24,5 +50,9 @@
     "airfare": "Airfare",
     "estimatedCost": "Estimated around {{cost}}{{currency}}"
   },
-  "ask": "Ask a question"
+  "country": {
+    "vietnam": "Vietnam",
+    "thailand": "Thailand"
+  },
+  "Country": "Country"
 }

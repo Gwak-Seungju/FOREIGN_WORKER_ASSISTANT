@@ -1,101 +1,80 @@
-import React, { useState } from 'react';
-import {
-  FlatList,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { useState } from "react";
+import { StyleProp, StyleSheet, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 
-type CustomDropdownProps = {
-  selected: string;
-  setSelected: (value: string) => void;
-  options: string[];
+interface CustomDropdownProps {
+  items: { label: string; value: string }[];
+  value: string | null;
+  onChange: (value: string) => void;
   placeholder?: string;
-};
+  style?: StyleProp<ViewStyle>;
+  dropDownStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+  showTickIcon?: boolean;
+  boldSelected?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+}
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({
-  selected,
-  setSelected,
-  options,
-  placeholder = '선택하세요',
-}) => {
-  const [visible, setVisible] = useState(false);
-
-  const handleSelect = (value: string) => {
-    setSelected(value);
-    setVisible(false);
-  };
+export default function CustomDropdown({
+  items,
+  value,
+  onChange,
+  placeholder = "Select...",
+  style,
+  dropDownStyle,
+  textStyle,
+  showTickIcon = true,
+  boldSelected = false,
+  containerStyle,
+}: CustomDropdownProps) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <TouchableOpacity
-        style={styles.dropdown}
-        onPress={() => setVisible(true)}
-      >
-        <Text style={styles.dropdownText}>
-          {selected || placeholder}
-        </Text>
-      </TouchableOpacity>
-
-      <Modal transparent visible={visible} animationType="fade">
-        <TouchableWithoutFeedback onPress={() => setVisible(false)}>
-          <View style={styles.overlay}>
-            <View style={styles.dropdownContainer}>
-              <FlatList
-                data={options}
-                keyExtractor={(item) => item}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity
-                    onPress={() => handleSelect(item)}
-                    style={[
-                      styles.option,
-                      index === options.length - 1 && { borderBottomWidth: 0 },
-                    ]}
-                  >
-                    <Text>{item}</Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    </>
+    <TouchableWithoutFeedback onPress={() => setOpen(false)}>
+      <View style={[styles.dropdownWrapper, dropDownStyle]}>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items.map((item) => ({
+            ...item,
+            labelStyle: {
+              fontWeight: boldSelected && item.value === value ? 'bold' : 'normal',
+            },
+          }))}
+          setOpen={setOpen}
+          setValue={(callback) => {
+            const selected = callback(value);
+            onChange(selected);
+          }}
+          setItems={() => {}}
+          placeholder={placeholder}
+          showTickIcon={showTickIcon}
+          style={[styles.dropdown, style]}
+          dropDownContainerStyle={[styles.dropdownContainer, containerStyle]}
+          textStyle={textStyle}
+          zIndex={1000}
+          dropDownDirection="AUTO"
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
-};
-
-export default CustomDropdown;
+}
 
 const styles = StyleSheet.create({
+  dropdownWrapper: {
+    zIndex: 1000,
+    width: 120,
+  },
   dropdown: {
-    borderWidth: 1,
     borderColor: '#ccc',
-    padding: 12,
+    borderWidth: 0,
     borderRadius: 8,
     backgroundColor: '#fff',
-  },
-  dropdownText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    paddingHorizontal: 40,
   },
   dropdownContainer: {
-    backgroundColor: '#fff',
+    borderColor: '#ccc',
+    borderWidth: 0,
     borderRadius: 8,
-    padding: 8,
-    maxHeight: 300,
-  },
-  option: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
+    backgroundColor: '#fff',
+  }
 });

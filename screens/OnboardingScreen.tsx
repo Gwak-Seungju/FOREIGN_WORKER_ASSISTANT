@@ -25,7 +25,7 @@ import {
 const { width } = Dimensions.get('window');
 
 export default function OnboardingScreen() {
-  const { nationality } = useCountryStore();
+  const { country } = useCountryStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [furthestIndex, setFurthestIndex] = useState(0);
   const [checkedSteps, setCheckedSteps] = useState<number[]>([]);
@@ -331,12 +331,12 @@ export default function OnboardingScreen() {
               )}
               {item.relatedLink &&
                 item.relatedLink.filter(
-                  (linkItem) => !linkItem.country || linkItem.country === nationality
+                  (linkItem) => !linkItem.country || linkItem.country === country
                 ).length > 0 && (
                 <View style={{ width: '100%', gap: 8, marginTop: 12 }}>
                   {item.relatedLink
                     .filter(
-                      (linkItem) => !linkItem.country || linkItem.country === nationality
+                      (linkItem) => !linkItem.country || linkItem.country === country
                     )
                     .map((linkItem, idx) => (
                       <TouchableOpacity
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
   highlightBox: {
     position: 'absolute',
     borderWidth: 2,
-    borderColor: 'red',
+    borderColor: '#007bff',
     borderRadius: 8,
     zIndex: 3,
   },

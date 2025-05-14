@@ -1,11 +1,42 @@
 import CustomDropdown from '@/components/CustomDropdown';
+import i18n from '@/i18n';
 import { useCountryStore } from '@/stores/countryStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
+function LanguageDropdown() {
+  const [value, setValue] = useState<string | null>(null);
+
+  const items = [
+    { label: '한국어', value: 'ko' },
+    { label: 'English', value: 'en' },
+    { label: 'ภาษาไทย', value: 'th' },
+    { label: 'Tiếng Việt', value: 'vi' },
+  ];
+
+  return (
+    <View style={{ position: 'absolute', top: 0, right: 0, zIndex: 1000, width: 120 }}>
+      <CustomDropdown
+        items={items}
+        value={value}
+        onChange={async (lang) => {
+          setValue(lang);
+          i18n.changeLanguage(lang);
+          await AsyncStorage.setItem('language', lang);
+        }}
+        placeholder="Language"
+        showTickIcon={false}
+        boldSelected
+      />
+    </View>
+  );
+}
+
 export default function InitialSetupScreen() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [country, setCountry] = useState('');
   const [hasJob, setHasJob] = useState<boolean | null>(null);
@@ -13,7 +44,7 @@ export default function InitialSetupScreen() {
   const [selectedVisa, setSelectedVisa] = useState<string | null>(null);
   const [showVisaModal, setShowVisaModal] = useState(false);
   const router = useRouter();
-  const { setNationality } = useCountryStore();
+  const { setCountry: setNationality } = useCountryStore();
 
   const handleVisaSelect = async (visa: string) => {
     setSelectedVisa(visa);
@@ -27,30 +58,57 @@ export default function InitialSetupScreen() {
     setModalVisible(true);
   };
 
+  const items = [
+    {label: t('country.vietnam'), value: 'vietnam'},
+    {label: t('country.thailand'), value: 'thailand'}
+  ]
+
   return (
     <View style={styles.container}>
       {/* Step 1: 국가 선택 */}
       {step === 1 && (
         <View style={styles.stepContainer}>
-          <Text style={styles.question}>어느 나라에 거주하시나요?</Text>
+          <Text style={styles.question}>{t('initialSetup.question1')}</Text>
           <Image
             source={require('@/assets/images/globe.png')} 
             style={styles.image}
           />
-          <CustomDropdown
-            selected={country}
-            setSelected={(itemValue) => {
-              setCountry(itemValue);
-              setNationality(itemValue);
-            }}
-            options={['베트남', '태국']}
-          />
+          <LanguageDropdown />
+          <View style={styles.countryDropdown}>
+            <CustomDropdown
+              items={items}
+              value={country}
+              onChange={async (cty) => {
+                setCountry(cty);
+                setNationality(cty);
+                await AsyncStorage.setItem('country', cty);
+              }}
+              placeholder={t('Country')}
+              showTickIcon={false}
+              boldSelected
+              dropDownStyle={{
+                borderColor: '#000',
+                borderWidth: 0,
+                borderRadius: 8,
+                backgroundColor: '#fff',
+                width: 120,
+              }}
+              containerStyle={{
+                borderColor: '#000',
+                borderWidth: 1,
+                borderRadius: 8,
+                backgroundColor: '#fff',
+                width: 120,
+              }}
+              style={{borderWidth: 1, borderColor: '#000', width: 120}}
+            />
+          </View>
           <TouchableOpacity
             style={[styles.button, !country && styles.disabled]}
             disabled={!country}
             onPress={() => setStep(2)}
           >
-            <Text style={styles.buttonText}>다음</Text>
+            <Text style={styles.buttonText}>{t('common.next')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -61,17 +119,17 @@ export default function InitialSetupScreen() {
           <TouchableOpacity onPress={() => setStep(step - 1)} style={{ position: 'absolute', top: 20, left: 10, zIndex: 10 }}>
             <Text style={{ fontSize: 28, color: '#222' }}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.question}>이미 한국 취업을 완료하셨나요?</Text>
+          <Text style={styles.question}>{t('initialSetup.question2')}</Text>
           <Image
             source={require('@/assets/images/korea-employment.png')} 
             style={styles.image}
           />
           <View style={styles.buttonGroup}>
             <TouchableOpacity style={styles.button} onPress={() => handleHasJob(true)}>
-              <Text style={styles.buttonText}>예</Text>
+              <Text style={styles.buttonText}>{t('common.yes')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => handleHasJob(false)}>
-              <Text style={styles.buttonText}>아니오</Text>
+              <Text style={styles.buttonText}>{t('common.no')}</Text>
             </TouchableOpacity>
           </View>
           <Modal visible={modalVisible} transparent animationType="fade">
@@ -83,19 +141,19 @@ export default function InitialSetupScreen() {
                   onPress={() => {}}
                 >
                   <Text style={styles.modalTitle}>
-                    {hasJob ? '메인 화면으로 이동하세요' : '다음 단계로 이동하세요'}
+                    {hasJob ? t('initialSetup.modalTitle.hasJob') : t('initialSetup.modalTitle.noJob')}
                   </Text>
                   <Text style={styles.modalSubtitle}>
                     {hasJob
-                      ? '한국 적응을 위한 다양한 서비스를 제공합니다.'
-                      : '한국 취업에 대해 알아가기 위해\n한 단계만을 남겨놓고 있습니다!'}
+                      ? t('initialSetup.modalSubtitle.hasJob')
+                      : t('initialSetup.modalSubtitle.noJob')}
                   </Text>
                   <View style={styles.modalButtonGroup}>
                     <TouchableOpacity
                       style={styles.modalButton}
                       onPress={() => setModalVisible(false)}
                     >
-                      <Text style={styles.modalButtonText}>닫기</Text>
+                      <Text style={styles.modalButtonText}>{t('common.close')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.primaryModalButton}
@@ -110,7 +168,7 @@ export default function InitialSetupScreen() {
                       }}
                     >
                       <Text style={styles.primaryModalButtonText}>
-                        {hasJob ? '메인화면으로' : '다음으로'}
+                        {hasJob ? t('initialSetup.moveToMain') : t('initialSetup.moveToNext')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -127,17 +185,17 @@ export default function InitialSetupScreen() {
           <TouchableOpacity onPress={() => setStep(step - 1)} style={{ position: 'absolute', top: 20, left: 10, zIndex: 10 }}>
             <Text style={{ fontSize: 28, color: '#222' }}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.question}>어떤 비자를 취득할 예정인가요?</Text>
+          <Text style={styles.question}>{t('initialSetup.question3')}</Text>
           <Image
             source={require('@/assets/images/visa.png')} 
             style={styles.image}
           />
           <View style={styles.buttonGroup}>
             <TouchableOpacity style={styles.button} onPress={() => handleVisaSelect('E-9')}>
-              <Text style={styles.buttonText}>E-9 (비한국계 외국인)</Text>
+              <Text style={styles.buttonText}>{t('initialSetup.visaE9')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.disabled]} disabled>
-              <Text style={styles.buttonText}>H-2 (한국계 외국인)</Text>
+              <Text style={styles.buttonText}>{t('initialSetup.visaH2')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -151,16 +209,16 @@ export default function InitialSetupScreen() {
                 style={styles.modalContainer}
                 onPress={() => {}}
               >
-                <Text style={styles.modalTitle}>온보딩 페이지로 이동합니다</Text>
+                <Text style={styles.modalTitle}>{t('initialSetup.visaModalTitle')}</Text>
                 <Text style={styles.modalSubtitle}>
-                  온보딩 절차를 따라 한국 취업에 성공하시길 바랍니다.
+                  {t('initialSetup.visaModalSubtitle')}
                 </Text>
                 <View style={styles.modalButtonGroup}>
                   <TouchableOpacity
                     style={styles.modalButton}
                     onPress={() => setShowVisaModal(false)}
                   >
-                    <Text style={styles.modalButtonText}>닫기</Text>
+                    <Text style={styles.modalButtonText}>{t('common.close')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.primaryModalButton}
@@ -170,7 +228,7 @@ export default function InitialSetupScreen() {
                       router.replace('/onboarding');
                     }}
                   >
-                    <Text style={styles.primaryModalButtonText}>이동하기</Text>
+                    <Text style={styles.primaryModalButtonText}>{t('common.proceed')}</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
@@ -183,10 +241,14 @@ export default function InitialSetupScreen() {
 }
 
 const styles = StyleSheet.create({
+  countryDropdown: {
+    alignSelf: 'center',
+    position: 'relative',
+    zIndex: 1000,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
     backgroundColor: 'white',
   },
   stepContainer: {

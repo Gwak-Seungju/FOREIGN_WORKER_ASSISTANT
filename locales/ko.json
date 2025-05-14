@@ -1,4 +1,30 @@
 {
+  "initialSetup": {
+    "question1": "당신은 어느 나라 출신인가요?",
+    "question2": "이미 한국에서 근무 중인가요?",
+    "question3": "어떤 비자를 발급받을 예정인가요?",
+    "modalTitle": {
+      "hasJob": "이미 한국에서 근무 중이시군요!",
+      "noJob": "아직 한국에서 근무하고 있지 않군요"
+    },
+    "modalSubtitle": {
+      "hasJob": "한국 생활에 잘 적응할 수 있도록 도와드릴게요!",
+      "noJob": "처음부터 차근차근 도와드릴게요!"
+    },
+    "moveToMain": "메인 페이지로 이동",
+    "moveToNext": "다음 단계로 이동",
+    "visaE9": "E-9 (비한민족 외국인)",
+    "visaH2": "H-2 (재외동포) - 준비 중",
+    "visaModalTitle": "좋아요! E-9 비자를 선택하셨네요",
+    "visaModalSubtitle": "지금부터 온보딩 단계로 안내해드릴게요"
+  },
+  "common": {
+    "next": "다음",
+    "yes": "예",
+    "no": "아니오",
+    "close": "닫기",
+    "proceed": "진행하기"
+  },
   "home": {
     "title": "워커브릿지",
     "subtitle": "한국 취업을 위한 첫걸음",
@@ -24,5 +50,9 @@
     "airfare": "항공료",
     "estimatedCost": "약 {{cost}}{{currency}} 예상"
   },
-  "ask": "무엇이든 물어보세요"
+  "country": {
+    "vietnam": "베트남",
+    "thailand": "태국"
+  },
+  "Country": "나라"
 }

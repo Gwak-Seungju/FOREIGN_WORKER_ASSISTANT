@@ -29,6 +29,16 @@ export default function TabLayout() {
     checkInitialSetup();
   }, []);
 
+  useEffect(() => {
+    const checkInitialSetup = async () => {
+      const language = await AsyncStorage.getItem('language');
+      if (language) {
+        setLanguage(language);
+      }
+    };
+    checkInitialSetup();
+  }, []);
+
   if (initialSetupDone === false) {
     return <Redirect href="/initial-setup" />;
   }

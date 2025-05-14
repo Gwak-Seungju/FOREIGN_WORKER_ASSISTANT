@@ -1,4 +1,30 @@
 {
+  "initialSetup": {
+    "question1": "Bạn đến từ quốc gia nào?",
+    "question2": "Bạn đã làm việc tại Hàn Quốc chưa?",
+    "question3": "Bạn dự định lấy loại visa nào?",
+    "modalTitle": {
+      "hasJob": "Bạn đã làm việc tại Hàn Quốc",
+      "noJob": "Bạn chưa làm việc tại Hàn Quốc"
+    },
+    "modalSubtitle": {
+      "hasJob": "Chúng tôi sẽ giúp bạn thích nghi với cuộc sống tại Hàn Quốc!",
+      "noJob": "Chúng tôi sẽ hướng dẫn bạn từ đầu!"
+    },
+    "moveToMain": "Chuyển đến Trang chính",
+    "moveToNext": "Tiếp tục bước tiếp theo",
+    "visaE9": "E-9 (Người nước ngoài không phải gốc Hàn)",
+    "visaH2": "H-2 (Người gốc Hàn) - Sắp ra mắt",
+    "visaModalTitle": "Tuyệt vời! Bạn đã chọn visa E-9",
+    "visaModalSubtitle": "Chúng tôi sẽ hướng dẫn bạn các bước tiếp theo trong hành trình."
+  },
+  "common": {
+    "next": "Tiếp theo",
+    "yes": "Có",
+    "no": "Không",
+    "close": "Đóng",
+    "proceed": "Tiếp tục"
+  },
   "home": {
     "title": "WorkerBridge",
     "subtitle": "Cầu nối đến sự nghiệp tại Hàn Quốc",
@@ -24,5 +50,9 @@
     "airfare": "Chi phí vé máy bay",
     "estimatedCost": "Khoảng {{cost}}{{currency}} dự kiến"
   },
-  "ask": "Hãy đặt câu hỏi"
+  "country": {
+    "vietnam": "Việt Nam",
+    "thailand": "Thái Lan"
+  },
+  "Country": "Quốc gia"
 }
