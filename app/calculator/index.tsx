@@ -1,16 +1,16 @@
+import { useCountryStore } from '@/stores/countryStore';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { useCountryStore } from '@/stores/countryStore';
-import axios from 'axios';
-
 const costItems = [
-  { id: 'passport', label: '여권 발급 비용' },
-  { id: 'document', label: '서류 발급 비용' },
-  { id: 'medical', label: '종합 검진 비용' },
-  { id: 'visa', label: '비자 신청 수수료' },
-  { id: 'eps', label: 'EPS-TOPIK 응시료' },
-  { id: 'flight', label: '항공료' },
+  { id: 'passportFee', label: '여권 발급 비용' },
+  { id: 'documentFee', label: '서류 발급 비용' },
+  { id: 'medicalFee', label: '종합 검진 비용' },
+  { id: 'visaFee', label: '비자 신청 수수료' },
+  { id: 'epsExamFee', label: 'EPS-TOPIK 응시료' },
+  { id: 'airfare', label: '항공료' },
 ];
 
 interface EstimateParams {
@@ -26,7 +26,7 @@ interface detailCost {
   passportFee: number;
   documentFee: number;
   medicalFee: number;
-  viasFee: number;
+  visaFee: number;
   epsExamFee: number;
   airfare: number;
 }
@@ -64,19 +64,21 @@ const fetchEstimatedCost = async (
 
 export default function CalculatorScreen() {
   const { nationality } = useCountryStore();
+  const router = useRouter();
+  const countryCode = nationality === '태국' ? 'TH' : 'VN';
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [result, setResult] = useState<EstimateResponse | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetchEstimatedCost('TH', {
-        passport: selectedItems.includes('passport'),
-        document: selectedItems.includes('document'),
-        medical: selectedItems.includes('medical'),
-        visa: selectedItems.includes('visa'),
-        epsExam: selectedItems.includes('eps'),
-        airfare: selectedItems.includes('flight'),
+      const res = await fetchEstimatedCost(countryCode, {
+        passport: selectedItems.includes('passportFee'),
+        document: selectedItems.includes('documentFee'),
+        medical: selectedItems.includes('medicalFee'),
+        visa: selectedItems.includes('visaFee'),
+        epsExam: selectedItems.includes('epsExamFee'),
+        airfare: selectedItems.includes('airfare'),
       });
       setResult(res);
     };
@@ -91,30 +93,58 @@ export default function CalculatorScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>대략적인 비용을 계산해드립니다!</Text>
+    <View style={styles.wrapper}>
+      <TouchableOpacity style={styles.header} onPress={() => router.back()}>
+        <Text style={{ fontSize: 24 }}>←</Text>  
+      </TouchableOpacity>
+      <ScrollView style={styles.fullScreen} contentContainerStyle={styles.container}>
+        <Text style={styles.title}>취업 준비 비용 계산</Text>
+        <Text style={styles.description}>한국 취업 준비를 위해 소비되는 비용을 대략적으로 계산해드립니다.</Text>
 
-      {costItems.map(item => (
-        <TouchableOpacity
-          key={item.id}
-          style={[styles.checkboxRow, selectedItems.includes(item.id) && styles.checked]}
-          onPress={() => toggleItem(item.id)}
-        >
-          <Text style={styles.checkbox}>{selectedItems.includes(item.id) ? '✅' : '⬜️'}</Text>
-          <Text style={styles.label}>{item.label}</Text>
-        </TouchableOpacity>
-      ))}
+        {costItems.map(item => {
+          const feeValue = result?.detail ? result.detail[item.id as keyof detailCost] : null;
+          return (
+            <TouchableOpacity
+              key={item.id}
+              style={[styles.checkboxRow, selectedItems.includes(item.id) && styles.checked]}
+              onPress={() => toggleItem(item.id)}
+            >
+              <Text style={styles.checkbox}>{selectedItems.includes(item.id) ? '✅' : '⬜️'}</Text>
+              <Text style={styles.label}>{item.label}</Text>
+              {selectedItems.includes(item.id) && feeValue !== null && (
+                <Text style={styles.feeText}>{feeValue.toLocaleString()}{nationality === '태국' ? '฿' : '₫'}</Text>
+              )}
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
 
       {result && (
-        <View style={styles.estimateContainer}>
-          <Text style={styles.estimateLabel}>약 {result.totalCost}{nationality === '태국' ? '฿' : '₫'} 예상</Text>
+        <View style={styles.fixedEstimateContainer}>
+          <Text style={styles.estimateLabel}>
+            약 {result.totalCost.toLocaleString()}
+            {nationality === '태국' ? '฿' : '₫'} 예상
+          </Text>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+    position: 'relative',
+  },
+  header: {
+    paddingTop: 24,
+    paddingHorizontal: 20,
+  },
+  fullScreen: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     paddingVertical: 32,
     paddingHorizontal: 20,
@@ -123,9 +153,16 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 8,
+    color: '#222',
+  },
+  description: {
+    fontSize: 15,
+    color: '#555',
+    marginBottom: 20,
+    lineHeight: 22,
   },
   checkboxRow: {
     flexDirection: 'row',
@@ -141,11 +178,27 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
   },
+  feeText: {
+    marginLeft: 'auto',
+    fontSize: 14,
+    color: '#555',
+  },
   estimateContainer: {
     marginTop: 24,
   },
   estimateLabel: {
     fontSize: 20,
     fontWeight: '500',
+  },
+  fixedEstimateContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    alignItems: 'center',
   },
 });

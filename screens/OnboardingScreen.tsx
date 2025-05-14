@@ -40,6 +40,7 @@ export default function OnboardingScreen() {
 
   const pathName = usePathname();
   const isOnboarding = pathName === '/onboarding';
+  const isFirstStep = currentIndex === 0;
 
   useEffect(() => {
     const checkFirstUse = async () => {
@@ -247,11 +248,10 @@ export default function OnboardingScreen() {
         <View style={styles.headerContainer}>
           <View style={styles.header}>
             <View style={styles.leftIcon}>
-              {currentIndex > 0 && (
-                <TouchableOpacity onPress={scrollToPrev}>
-                  <Entypo name="chevron-left" size={24} color="black" />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity onPress={() => isFirstStep ? router.back(): scrollToPrev()}>
+                {isOnboarding && (isFirstStep ? <Text style={{ fontSize: 24 }}>←</Text> : <Entypo name="chevron-left" size={24} color="black" />)}
+                {(!isOnboarding && !isFirstStep) && <Entypo name="chevron-left" size={24} color="black" />}
+              </TouchableOpacity>
             </View>
             
             <View style={styles.progressWrapper}>
@@ -272,7 +272,7 @@ export default function OnboardingScreen() {
                           ]}
                         >
                           {showExpandedProgress && checkedSteps.includes(idx) && (
-                            <Entypo name="check" size={8} color="green" />
+                            <Entypo name="check" size={8} color="blue" />
                           )}
                         </View>
                       </TouchableOpacity>
@@ -287,7 +287,7 @@ export default function OnboardingScreen() {
                   
             <View style={styles.rightIcon}>
               <TouchableOpacity onPress={toggleCheck} ref={checkButtonRef}>
-                <Entypo name="check" size={20} color={isChecked ? 'green' : 'gray'} />
+                <Entypo name="check" size={20} color={isChecked ? 'blue' : 'gray'} />
               </TouchableOpacity>
             </View>
           </View>
@@ -399,12 +399,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   progressBarItemChecked: {
-    borderColor: 'green',
+    borderColor: 'blue',
     borderWidth: 1,
   },
   image: { width: '80%', height: 220, marginBottom: 16 },
   description: { fontSize: 16, color: '#333', textAlign: 'center' },
-  slide: { justifyContent: 'center', alignItems: 'center', padding: 20 },
+  slide: { justifyContent: 'flex-start', alignItems: 'center', padding: 20 },
   title: { fontSize: 24, marginBottom: 10, textAlign: 'center' },
   buttonGroup: {
     flexDirection: 'column',
