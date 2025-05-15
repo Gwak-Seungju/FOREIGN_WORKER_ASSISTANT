@@ -1,11 +1,13 @@
 import { useConversationStore } from '@/stores/conversationStore';
+import Feather from '@expo/vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -127,43 +129,61 @@ export default function ChatScreen() {
   }, [conversationId]);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Text style={item.role === 'user' ? styles.user : styles.assistant}>
-            {item.content}
-          </Text>
-        )}
-        contentContainerStyle={{
-          paddingBottom: messages.length === 0 ? 0 : 160,
-          paddingTop: 60,
-          paddingRight: 12,
-        }}
-      />
-
-      {messages.length === 0 && (
-        <View style={styles.examplesBelow}>
-          <Text style={styles.examplesTitle}>무엇이 궁금하신가요?</Text>
-          {exampleMessages.map((msg, idx) => (
-            <TouchableOpacity key={idx} onPress={() => handleSend(msg)}>
-              <Text style={styles.exampleText}>❝ {msg} ❞</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      <View style={styles.inputWrapper}>
-        <TextInput
-          value={input}
-          onChangeText={setInput}
-          placeholder="질문을 입력하세요"
-          style={styles.input}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={60}
+    >
+      <View style={styles.container}>
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Text style={item.role === 'user' ? styles.user : styles.assistant}>
+              {item.content}
+            </Text>
+          )}
+          contentContainerStyle={{
+            paddingBottom: messages.length === 0 ? 0 : 160,
+            paddingTop: 60,
+            paddingRight: 12,
+          }}
+          keyboardShouldPersistTaps="handled"
         />
-        <Button title="전송" onPress={() => handleSend(input)} disabled={!input.trim()} />
+
+        {messages.length === 0 && (
+          <View style={styles.examplesBelow}>
+            <Text style={styles.examplesTitle}>무엇이 궁금하신가요?</Text>
+            {exampleMessages.map((msg, idx) => (
+              <TouchableOpacity key={idx} onPress={() => handleSend(msg)}>
+                <Text style={styles.exampleText}>❝ {msg} ❞</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputBox}>
+            <TextInput
+              value={input}
+              onChangeText={setInput}
+              placeholder={messages.length === 0 ? "위 예시처럼 질문해보세요!" : "무엇이든 물어보세요"}
+              style={styles.input}
+              placeholderTextColor={'#999'}
+              underlineColorAndroid="transparent"
+              selectionColor="#007AFF"
+            />
+            <TouchableOpacity
+              onPress={() => handleSend(input)}
+              disabled={!input.trim()}
+              style={styles.sendButtonInside}
+            >
+              <Feather name="send" size={20} color={input.trim() ? '#007AFF' : '#ccc'} />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -175,8 +195,8 @@ const styles = StyleSheet.create({
     marginBottom: 60,
     backgroundColor: '#fff',
   },
-  examplesTitle: { fontWeight: 'bold', fontSize: 18, marginBottom: 12 },
-  exampleText: { marginBottom: 12, fontSize: 16, color: '#333' },
+  examplesTitle: { fontWeight: 'bold', fontSize: 18, marginBottom: 12},
+  exampleText: { marginBottom: 12, fontSize: 14, color: '#333' },
   user: {
     alignSelf: 'flex-end',
     backgroundColor: '#DCF8C6',
@@ -206,13 +226,30 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#ccc',
   },
-  input: {
+  inputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
     borderWidth: 1,
     borderColor: '#aaa',
-    borderRadius: 10,
+    borderRadius: 20,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginRight: 8,
+    paddingVertical: 6,
+    backgroundColor: '#fff',
+  },
+  inputBoxFocused: {
+    borderColor: '#007AFF',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+  },
+  sendButtonInside: {
+    paddingLeft: 8,
   },
 });

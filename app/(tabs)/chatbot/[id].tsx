@@ -1,16 +1,19 @@
 import { useConversationStore } from '@/stores/conversationStore';
+import Feather from '@expo/vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Button,
   FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 const exampleMessages = [
@@ -30,6 +33,10 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<
     { id: number; role: 'user' | 'assistant'; content: string }[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const flatListRef = useRef<FlatList>(null);
+  const [contentHeight, setContentHeight] = useState(0);
 
   const sendMessageToOpenAI = async (context: typeof messages) => {
     try {
@@ -54,6 +61,7 @@ export default function ChatScreen() {
 
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
+    Keyboard.dismiss(); // hide the keyboard after submitting
 
     const isFirstMessage = messages.length === 0;
 
@@ -62,7 +70,10 @@ export default function ChatScreen() {
     setMessages(updated);
     setInput('');
 
+    setIsLoading(true);
     const reply = await sendMessageToOpenAI(updated);
+    setIsLoading(false);
+
     const assistantMsg = { id: Date.now() + 1, role: 'assistant' as const, content: reply };
     const finalMessages = [...updated, assistantMsg];
     setMessages(finalMessages);
@@ -103,44 +114,86 @@ export default function ChatScreen() {
     loadMessages();
   }, [conversationId]);
 
+  useEffect(() => {
+    const showSub = Keyboard.addListener('keyboardDidShow', () => {
+      // removed scrollToEnd logic here as per instructions
+    });
+    return () => showSub.remove();
+  }, []);
+  console.log(isLoading);
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Text style={item.role === 'user' ? styles.user : styles.assistant}>
-            {item.content}
-          </Text>
-        )}
-        contentContainerStyle={{
-          paddingBottom: messages.length === 0 ? 0 : 160,
-          paddingTop: 60,
-          paddingRight: 12,
-        }}
-      />
-
-      {messages.length === 0 && (
-        <View style={styles.examplesBelow}>
-          <Text style={styles.examplesTitle}>무엇이 궁금하신가요?</Text>
-          {exampleMessages.map((msg, idx) => (
-            <TouchableOpacity key={idx} onPress={() => handleSend(msg)}>
-              <Text style={styles.exampleText}>❝ {msg} ❞</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      <View style={styles.inputWrapper}>
-        <TextInput
-          value={input}
-          onChangeText={setInput}
-          placeholder="질문을 입력하세요"
-          style={styles.input}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={60}
+    >
+      <View style={styles.container}>
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Text style={item.role === 'user' ? styles.user : styles.assistant}>
+              {item.content}
+            </Text>
+          )}
+          contentContainerStyle={{
+            paddingBottom: messages.length === 0 ? 0 : 160,
+            paddingTop: 60,
+            paddingRight: 12,
+          }}
+          onContentSizeChange={(_, height) => {
+            setContentHeight(height);
+          }}
+          onLayout={event => {
+            const layoutHeight = event.nativeEvent.layout.height;
+            flatListRef.current?.scrollToOffset({
+              offset: contentHeight - layoutHeight,
+              animated: true,
+            });
+          }}
         />
-        <Button title="전송" onPress={() => handleSend(input)} disabled={!input.trim()} />
+
+        {messages.length === 0 && (
+          <View style={styles.examplesBelow}>
+            <Text style={styles.examplesTitle}>무엇이 궁금하신가요?</Text>
+            {exampleMessages.map((msg, idx) => (
+              <TouchableOpacity key={idx} onPress={() => handleSend(msg)}>
+                <Text style={styles.exampleText}>❝ {msg} ❞</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {isLoading && (
+          <View style={{ paddingHorizontal: 16, marginBottom: 80 }}>
+            <Text style={{ color: '#888', fontStyle: 'italic' }}>답변을 생성 중입니다...</Text>
+          </View>
+        )}
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputBox}>
+            <TextInput
+              value={input}
+              onChangeText={setInput}
+              placeholder={messages.length === 0 ? "위 예시처럼 질문해보세요!" : "무엇이든 물어보세요"}
+              style={styles.input}
+              placeholderTextColor={'#999'}
+              underlineColorAndroid="transparent"
+              selectionColor="#007AFF"
+            />
+            <TouchableOpacity
+              onPress={() => handleSend(input)}
+              disabled={!input.trim()}
+              style={styles.sendButtonInside}
+            >
+              <Feather name="send" size={20} color={input.trim() ? '#007AFF' : '#ccc'} />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -183,13 +236,30 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#ccc',
   },
-  input: {
+  inputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
     borderWidth: 1,
     borderColor: '#aaa',
-    borderRadius: 10,
+    borderRadius: 20,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginRight: 8,
+    paddingVertical: 6,
+    backgroundColor: '#fff',
+  },
+  inputBoxFocused: {
+    borderColor: '#007AFF',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+  },
+  sendButtonInside: {
+    paddingLeft: 8,
   },
 });

@@ -1,3 +1,4 @@
+import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
@@ -31,7 +32,16 @@ export default function ChatbotLayout() {
   useEffect(() => {
     (async () => {
       const stored = await AsyncStorage.getItem(CONVERSATIONS_KEY);
-      if (stored) setConversations(JSON.parse(stored));
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          setConversations(Array.isArray(parsed) ? parsed : []);
+        } catch {
+          setConversations([]);
+        }
+      } else {
+        setConversations([]);
+      }
     })();
   }, []);
 
@@ -41,7 +51,16 @@ export default function ChatbotLayout() {
 
   const openMenu = async () => {
     const stored = await AsyncStorage.getItem(CONVERSATIONS_KEY);
-    if (stored) setConversations(JSON.parse(stored));
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setConversations(Array.isArray(parsed) ? parsed : []);
+      } catch {
+        setConversations([]);
+      }
+    } else {
+      setConversations([]);
+    }
 
     setShowMenu(true);
     Animated.timing(slideAnim, {
@@ -110,32 +129,40 @@ export default function ChatbotLayout() {
                   <Text style={{ color: '#fff', textAlign: 'center' }}>+ 새 대화 시작</Text>
                 </TouchableOpacity>
                 <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 12 }}>대화 목록</Text>
-                {conversations.filter((c) => c.title).map((conv) => (
-                  <View key={conv.id} style={styles.conversationItem}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        router.push(`/chatbot/${conv.id}`);
-                        setCurrentConvId(conv.id);
-                        closeMenu();
-                      }}
-                      style={{ flex: 1 }}
-                    >
-                      <Text numberOfLines={1} ellipsizeMode="tail" style={{ flexShrink: 1 }}>
-                        {conv.title}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={async () => {
-                        const filtered = conversations.filter((c) => c.id !== conv.id);
-                        setConversations(filtered);
-                        await AsyncStorage.setItem(CONVERSATIONS_KEY, JSON.stringify(filtered));
-                        await AsyncStorage.removeItem(getMessagesKey(conv.id));
-                      }}
-                    >
-                      <Text style={{ color: 'red', marginLeft: 10 }}>삭제</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
+                {conversations.length === 0 ? (
+                  <Text style={{ color: '#aaa', fontStyle: 'italic', marginTop: 8 }}>
+                    저장된 대화가 없습니다.
+                  </Text>
+                ) : (
+                  conversations.map((conv) =>
+                    !!conv?.title && (
+                      <View key={conv.id} style={styles.conversationItem}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            router.push(`/chatbot/${conv.id}`);
+                            setCurrentConvId(conv.id);
+                            closeMenu();
+                          }}
+                          style={{ flex: 1 }}
+                        >
+                          <Text numberOfLines={1} ellipsizeMode="tail" style={{ flexShrink: 1 }}>
+                            {conv.title}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={async () => {
+                            const filtered = conversations.filter((c) => c.id !== conv.id);
+                            setConversations(filtered);
+                            await AsyncStorage.setItem(CONVERSATIONS_KEY, JSON.stringify(filtered));
+                            await AsyncStorage.removeItem(getMessagesKey(conv.id));
+                          }}
+                        >
+                          <AntDesign name="delete" size={16} color="red" />
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  )
+                )}
               </Animated.View>
             </TouchableWithoutFeedback>
           </View>
@@ -151,9 +178,7 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 999,
-    backgroundColor: 'white',
     borderRadius: 6,
-    elevation: 3,
   },
   sidebarBase: {
     width: 280,
