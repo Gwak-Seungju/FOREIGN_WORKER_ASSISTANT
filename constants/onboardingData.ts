@@ -12,7 +12,7 @@ export type OnboardingItem = {
   relatedLink?: {
     title: string,
     link: string,
-    country?: '태국' | '베트남',
+    country?: 'thailand' | 'vietnam',
   }[];
 };
 
@@ -105,17 +105,17 @@ export const ONBOARDINGDATA: OnboardingItem[] = [
       {
         title: "사전예약 링크(하노이)",
         link: "https://www.visaforkorea-vt.com/?lang=vn",
-        country: '베트남'
+        country: 'vietnam'
       },
       {
         title: "사전예약 링크(호치민)",
         link: "https://visaforkorea-hc.com/?lang=vn",
-        country: '베트남'
+        country: 'vietnam'
       },
       {
         title: "사전예약 링크",
         link: "https://overseas.mofa.go.kr/th-th/brd/m_3135/list.do",
-        country: '태국'
+        country: 'thailand'
       }
     ]
   },
@@ -127,12 +127,12 @@ export const ONBOARDINGDATA: OnboardingItem[] = [
       {
         title: "항공편 예약",
         link: "https://www.vietjetair.com/",
-        country: '베트남'
+        country: 'vietnam'
       },
       {
         title: "항공편 예약",
         link: "https://www.airasia.com/th",
-        country: '태국'
+        country: 'thailand'
       }
     ]
   },

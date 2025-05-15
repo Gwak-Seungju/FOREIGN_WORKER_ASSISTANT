@@ -23,7 +23,9 @@
     "yes": "Yes",
     "no": "No",
     "close": "Close",
-    "proceed": "Proceed"
+    "proceed": "Proceed",
+    "start": "Start",
+    "confirm": "Confirm"
   },
   "home": {
     "title": "WorkerBridge",
@@ -60,5 +62,96 @@
     "vietnam": "Vietnam",
     "thailand": "Thailand"
   },
-  "Country": "Country"
+  "Country": "Country",
+  "onboarding": {
+    "guide": {
+      "check": "Tap 'Check' if you've completed this step.",
+      "next": "Tap 'Next' to proceed to the next step.",
+      "progress": "Tap the progress bar to view or jump to another step.",
+      "calculator": "You can estimate the cost of preparing for employment using the calculator."
+    },
+    "1": {
+      "title": "Let's check the basic eligibility",
+      "checklist": [
+        "Are you between 18 and 39 years old?",
+        "Do you have no criminal record and no disqualification for departure?",
+        "Are you in good health without contagious or serious illness?",
+        "Are you not banned from working abroad or returning from overseas work?"
+      ]
+    },
+    "2": {
+      "title": "Please prepare the required documents",
+      "checklist": [
+        "Passport copy",
+        "ID card copy",
+        "Passport photo",
+        "Certificate of final education",
+        "Health certificate"
+      ]
+    },
+    "3": {
+      "title": "Register as a job seeker (EPS registration)",
+      "checklist": [
+        "Check the registration schedule notice",
+        "Bring the prepared documents",
+        "Ensure mobile verification is possible and visit the agency",
+        "Fill out the application form and submit the documents"
+      ]
+    },
+    "4": {
+      "title": "Take the EPS-TOPIK exam",
+      "relatedLinks": [
+        "Application Link",
+        "Exam Schedule Link",
+        "Result Announcement Link"
+      ]
+    },
+    "5": {
+      "title": "Check whether your name is listed in the EPS job seeker list"
+    },
+    "6": {
+      "title": "Proceed with employment matching and contract"
+    },
+    "7": {
+      "title": "Receive the Certificate for Visa Issuance",
+      "relatedLinks": [
+        "Visa Certificate Link"
+      ]
+    },
+    "8": {
+      "title": "Apply for a visa",
+      "relatedLinks": {
+        "vietnam1": "Pre-application (Hanoi)",
+        "vietnam2": "Pre-application (Ho Chi Minh)",
+        "thailand1": "Pre-application Link"
+      }
+    },
+    "9": {
+      "title": "Book your flight ticket",
+      "relatedLinks": {
+        "vietnam1": "Flight Booking",
+        "thailand1": "Flight Booking"
+      }
+    },
+    "10": {
+      "title": "Pack the necessary documents and depart"
+    },
+    "11": {
+      "title": "Within 15 days of entering Korea, complete job training and medical checkup",
+      "checklist": ["Job training", "Medical checkup"],
+      "relatedLinks": [
+        "Training schedule and eligibility"
+      ]
+    },
+    "12": {
+      "title": "Assigned to workplace and start working"
+    },
+    "13": {
+      "title": "Apply for Alien Registration Card",
+      "relatedLinks": [
+        "ARC Application/Reservation",
+        "Form downloads and system information"
+      ]
+    }
+  }
 }

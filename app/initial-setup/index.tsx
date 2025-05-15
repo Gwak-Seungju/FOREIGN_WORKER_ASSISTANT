@@ -280,12 +280,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
+    maxWidth: 180,
   },
   disabled: {
     backgroundColor: '#aaa',
   },
   buttonText: {
     color: 'white',
+    textAlign: 'center',
+    flexWrap: 'wrap',
   },
   buttonGroup: {
     flexDirection: 'row',

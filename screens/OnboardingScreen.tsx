@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePathname, useRouter } from 'expo-router';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Animated,
   Dimensions,
@@ -25,6 +26,7 @@ import {
 const { width } = Dimensions.get('window');
 
 export default function OnboardingScreen() {
+  const { t } = useTranslation();
   const { country } = useCountryStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [furthestIndex, setFurthestIndex] = useState(0);
@@ -33,6 +35,7 @@ export default function OnboardingScreen() {
   const [guideStep, setGuideStep] = useState<number | null>(null);
   const [showExpandedProgress, setShowExpandedProgress] = useState(false);
   const [highlightLayout, setHighlightLayout] = useState<{x: number; y: number; width: number; height: number} | null>(null);
+  const [checkedChecklistItems, setCheckedChecklistItems] = useState<{ [key: string]: number[] }>({});
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef<FlatList>(null);
   const router = useRouter();
@@ -62,6 +65,12 @@ export default function OnboardingScreen() {
       const savedChecked = await AsyncStorage.getItem('@onboarding_read_steps');
       if (savedChecked) {
         setCheckedSteps(JSON.parse(savedChecked));
+      }
+
+      // Load checked checklist items from AsyncStorage
+      const savedChecklist = await AsyncStorage.getItem('@onboarding_checked_items');
+      if (savedChecklist) {
+        setCheckedChecklistItems(JSON.parse(savedChecklist));
       }
     };
     checkFirstUse();
@@ -125,6 +134,30 @@ export default function OnboardingScreen() {
     }
   };
 
+  // Toggle a checklist item (checkbox) for a given step
+  const toggleChecklistItem = async (stepId: string, index: number) => {
+    try {
+      const prevChecked = checkedChecklistItems[stepId] || [];
+      let updated: number[];
+
+      if (prevChecked.includes(index)) {
+        updated = prevChecked.filter((i) => i !== index);
+      } else {
+        updated = [...prevChecked, index];
+      }
+
+      const newCheckedChecklistItems = {
+        ...checkedChecklistItems,
+        [stepId]: updated,
+      };
+
+      setCheckedChecklistItems(newCheckedChecklistItems);
+      await AsyncStorage.setItem('@onboarding_checked_items', JSON.stringify(newCheckedChecklistItems));
+    } catch (err) {
+      console.error('Error toggling checklist item:', err);
+    }
+  };
+
   const scrollToIndex = (index: number) => {
     if (isReadyToScroll) {
       slidesRef.current?.scrollToIndex({ index, animated: true });
@@ -174,11 +207,12 @@ export default function OnboardingScreen() {
     const isBottomHalf = highlightLayout.y > screenHeight / 2;
 
     safeTop = isBottomHalf
-      ? highlightLayout.y - bubbleHeight - 30
+      ? highlightLayout.y - bubbleHeight - 45
       : bubbleTop + 10;
 
     safeLeft = Math.min(Math.max(bubbleLeft, 10), screenWidth - bubbleWidth - 10);
   }
+  console.log(country);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff'}}>
@@ -215,33 +249,33 @@ export default function OnboardingScreen() {
             >
               {guideStep === 0 && (
                 <>
-                  <Text style={styles.guideText}>{`'체크' 버튼을 눌러 현재 단계를 완료할 수 있습니다.`}</Text>
+                  <Text style={styles.guideText}>{t('onboarding.guide.check')}</Text>
                   <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
-                    <Text style={{ color: '#fff' }}>확인</Text>
+                    <Text style={{ color: '#fff' }}>{t('common.confirm')}</Text>
                   </TouchableOpacity>
                 </>
               )}
               {guideStep === 1 && (
                 <>
-                  <Text style={styles.guideText}>{`'다음' 버튼을 눌러 다음 단계로 이동하세요.`}</Text>
+                  <Text style={styles.guideText}>{t('onboarding.guide.next')}</Text>
                   <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
-                    <Text style={{ color: '#fff' }}>확인</Text>
+                    <Text style={{ color: '#fff' }}>{t('common.confirm')}</Text>
                   </TouchableOpacity>
                 </>
               )}
               {guideStep === 2 && (
                 <>
-                  <Text style={styles.guideText}>{`프로그레스 바를 눌러 원하는 단계로 바로 이동할 수 있습니다.`}</Text>
+                  <Text style={styles.guideText}>{t('onboarding.guide.progress')}</Text>
                   <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
-                    <Text style={{ color: '#fff' }}>확인</Text>
+                    <Text style={{ color: '#fff' }}>{t('common.confirm')}</Text>
                   </TouchableOpacity>
                 </>
               )}
               {guideStep === 3 && (
                 <>
-                  <Text style={styles.guideText}>{`비용 계산기를 통해 취업 준비에 드는 대략적인 비용을 계산할 수 있습니다.`}</Text>
+                  <Text style={styles.guideText}>{t('onboarding.guide.calculator')}</Text>
                   <TouchableOpacity onPress={onGuideNext} style={styles.guideClose}>
-                    <Text style={{ color: '#fff' }}>확인</Text>
+                    <Text style={{ color: '#fff' }}>{t('common.confirm')}</Text>
                   </TouchableOpacity>
                 </>
               )}
@@ -300,20 +334,30 @@ export default function OnboardingScreen() {
           data={ONBOARDINGDATA}
           renderItem={({ item }: { item: OnboardingItem}) => (
             <View style={[styles.slide, { width }]}>
-              <Text style={[styles.title]}>{item.title}</Text>
+              <Text style={[styles.title]}>{t(`onboarding.${item.id}.title`)}</Text>
               {(item.checklist && item.id !== '11') && (
                 <View style={{ alignItems: 'center', width: '100%', gap: 12 }}>
                   {item.checklist.type === 'checkbox'
                   ? item.checklist.items.map((subItem, i) => (
-                      <View key={i} style={styles.checklistRow}>
-                        <Entypo name="check" size={16} color="gray" />
-                        <Text style={styles.checklistText}>{subItem.text}</Text>
-                      </View>
+                      <TouchableOpacity
+                        key={i}
+                        onPress={() => toggleChecklistItem(item.id, i)}
+                        style={[styles.checklistRow, {alignItems: 'center'}]}
+                        activeOpacity={0.7}
+                      >
+                        <View style={styles.checkboxBox}>
+                        {Array.isArray(checkedChecklistItems[item.id]) &&
+  checkedChecklistItems[item.id].includes(i) && (
+    <Entypo name="check" size={14} color="#007bff" />
+)}
+                        </View>
+                        <Text style={styles.checklistText}>{t(`onboarding.${item.id}.checklist.${i}`)}</Text>
+                      </TouchableOpacity>
                     ))
                   : item.checklist.items.map((subItem, i) => (
                       <View key={i} style={styles.checklistRow}>
                         <Text style={styles.checklistText}>{i + 1}.</Text>
-                        <Text style={styles.checklistText}>{subItem.text}</Text>
+                        <Text style={styles.checklistText}>{t(`onboarding.${item.id}.checklist.${i}`)}</Text>
                       </View>
                     ))}
                 </View>
@@ -322,9 +366,9 @@ export default function OnboardingScreen() {
               {(item.checklist && item.id === '11') && (
                 <View style={{ alignItems: 'center', width: '100%', gap: 12 }}>
                 {item.checklist.items.map((subItem, i) => (
-                  <View key={i} style={[styles.checklistRow, { justifyContent: 'center'}]}>
+                  <View key={i} style={[styles.checklistRow, { alignItems: 'center', justifyContent: 'center'}]}>
                     <Entypo name="check" size={16} color="gray" />
-                    <Text style={styles.checklistText}>{subItem.text}</Text>
+                    <Text style={styles.checklistText}>{t(`onboarding.${item.id}.checklist.${i}`)}</Text>
                   </View>
                 ))}
                 </View>
@@ -351,7 +395,10 @@ export default function OnboardingScreen() {
                         }}
                       >
                         <Text style={{ color: '#007AFF', textAlign: 'center' }}>
-                          {linkItem.title}
+                          {!linkItem.country 
+                            ? t(`onboarding.${item.id}.relatedLinks.${idx}`)
+                            : t(`onboarding.${item.id}.relatedLinks.${country}${idx+1}`)
+                          }
                         </Text>
                       </TouchableOpacity>
                     ))}
@@ -380,7 +427,7 @@ export default function OnboardingScreen() {
           scrollEnabled={false}
           onLayout={() => setIsReadyToScroll(true)}
         />
-        <TouchableOpacity style={styles.calculator} ref={calculatorRef} onPress={() => router.push('/calculator')}>
+        <TouchableOpacity style={styles.calculator} ref={calculatorRef} onPress={() => router.push('/(tabs)/calculator')}>
           <Ionicons name="calculator" size={36} color="black" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.question} onPress={() => setGuideStep(0)}>
@@ -390,7 +437,7 @@ export default function OnboardingScreen() {
         <View style={styles.buttonGroup}>
           <TouchableOpacity style={styles.button} onPress={scrollToNext} ref={nextButtonRef}>
             <Text style={styles.buttonText}>
-              {currentIndex === ONBOARDINGDATA.length - 1 ? '시작하기' : '다음'}
+              {currentIndex === ONBOARDINGDATA.length - 1 ? t('common.start') : t('common.next')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -549,6 +596,16 @@ const styles = StyleSheet.create({
   checklistText: {
     fontSize: 16,
     flexWrap: 'wrap',
+  },
+  checkboxBox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#007bff',
+    backgroundColor: '#fff',
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 

@@ -10,16 +10,7 @@ import { LanguageDropdown } from '../initial-setup';
 export default function TabLayout() {
   const router = useRouter();
   const { t } = useTranslation();
-  
-  const [open, setOpen] = useState(false);
   const [language, setLanguage] = useState('en');
-  const [items, setItems] = useState([
-    { label: 'English', value: 'en' },
-    { label: '한국어', value: 'ko' },
-    { label: 'ไทย', value: 'th' },
-    { label: 'Tiếng Việt', value: 'vi' },
-  ]);
-
   const [initialSetupDone, setInitialSetupDone] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -57,7 +48,7 @@ export default function TabLayout() {
       <Text style={styles.description}>{t('home.description')}</Text>
 
       <View style={styles.featureGrid}>
-        <TouchableOpacity style={styles.featureCard} onPress={() => router.push('/calculator')}>
+        <TouchableOpacity style={styles.featureCard} onPress={() => router.push('/(tabs)/calculator')}>
           <View style={[styles.featureIcon, { backgroundColor: '#E0F0FF' }]}>
             <Ionicons name="calculator" size={40} color={'#dadada'} />
           </View>
@@ -66,7 +57,7 @@ export default function TabLayout() {
           <Text style={styles.featureDescription}>{t('home.calculator_description')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.featureCard} onPress={() => router.push('/onboarding')}>
+        <TouchableOpacity style={styles.featureCard} onPress={() => router.push('/(tabs)/onboarding')}>
           <View style={[styles.featureIcon, { backgroundColor: '#E6F7E6' }]}>
             <Ionicons name="checkmark-done" size={40} color={'#dadada'} />
           </View>
@@ -75,7 +66,7 @@ export default function TabLayout() {
           <Text style={styles.featureDescription}>{t('home.onboarding_description')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.featureCard, { width: '100%' }]} onPress={() => router.push('/chatbot')}>
+        <TouchableOpacity style={[styles.featureCard, { width: '100%' }]} onPress={() => router.push('/(tabs)/chatbot')}>
           <View style={[styles.featureIcon, { backgroundColor: '#FFF2CC' }]}>
           <Ionicons name="chatbubble-ellipses" size={40} color={'#dadada'} />
           </View>

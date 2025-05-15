@@ -23,7 +23,9 @@
     "yes": "Có",
     "no": "Không",
     "close": "Đóng",
-    "proceed": "Tiếp tục"
+    "proceed": "Tiếp tục",
+    "start": "Bắt đầu",
+    "confirm": "Xác nhận"
   },
   "home": {
     "title": "WorkerBridge",
@@ -60,5 +62,97 @@
     "vietnam": "Việt Nam",
     "thailand": "Thái Lan"
   },
-  "Country": "Quốc gia"
+  "Country": "Quốc gia",
+  "onboarding": {
+    "guide": {
+      "check": "Nhấn 'Đã hoàn thành' nếu bạn đã hoàn thành bước này.",
+      "next": "Nhấn 'Tiếp theo' để chuyển sang bước tiếp theo.",
+      "progress": "Nhấn thanh tiến trình để xem hoặc chuyển đến bước khác.",
+      "calculator": "Bạn có thể ước tính chi phí chuẩn bị làm việc tại Hàn Quốc bằng công cụ tính chi phí."
+    },
+    "1": {
+      "title": "Hãy kiểm tra điều kiện đủ điều kiện cơ bản",
+      "checklist": [
+        "Bạn có từ 18 đến 39 tuổi không?",
+        "Bạn có tiền án tiền sự hoặc bị cấm xuất cảnh không?",
+        "Bạn có sức khỏe tốt, không mắc bệnh truyền nhiễm hoặc bệnh nghiêm trọng không?",
+        "Bạn có bị cấm làm việc ở nước ngoài hoặc từng trở về từ lao động không?"
+      ]
+    },
+    "2": {
+      "title": "Hãy chuẩn bị các giấy tờ cần thiết",
+      "checklist": [
+        "Bản sao hộ chiếu",
+        "Bản sao CMND/CCCD",
+        "Ảnh hộ chiếu",
+        "Bằng cấp học vấn cuối cùng",
+        "Giấy xác nhận sức khỏe"
+      ]
+    },
+    "3": {
+      "title": "Đăng ký danh sách người tìm việc (EPS)",
+      "checklist": [
+        "Kiểm tra thông báo lịch đăng ký",
+        "Mang theo các giấy tờ đã chuẩn bị",
+        "Đảm bảo có thể xác minh qua điện thoại và đến cơ quan liên quan",
+        "Điền đơn đăng ký và nộp hồ sơ"
+      ]
+    },
+    "4": {
+      "title": "Tham gia kỳ thi EPS-TOPIK",
+      "relatedLinks": [
+        "Liên kết đăng ký",
+        "Liên kết lịch thi",
+        "Liên kết kết quả"
+      ]
+    },
+    "5": {
+      "title": "Kiểm tra xem bạn đã được đưa vào danh sách EPS chưa"
+    },
+    "6": {
+      "title": "Tiến hành ghép việc và ký hợp đồng lao động"
+    },
+    "7": {
+      "title": "Nhận giấy chứng nhận cấp thị thực",
+      "relatedLinks": [
+        "Liên kết giấy chứng nhận thị thực"
+      ]
+    },
+    "8": {
+      "title": "Nộp đơn xin thị thực",
+      "relatedLinks": {
+        "vietnam1": "Đăng ký trước (Hà Nội)",
+        "vietnam2": "Đăng ký trước (Hồ Chí Minh)",
+        "thailand1": "Liên kết đăng ký trước"
+      }
+    },
+    "9": {
+      "title": "Đặt vé máy bay",
+      "relatedLinks": {
+        "vietnam1": "Đặt vé máy bay",
+        "thailand1": "Đặt vé máy bay"
+      }
+    },
+    "10": {
+      "title": "Chuẩn bị đầy đủ giấy tờ và khởi hành"
+    },
+    "11": {
+      "title": "Trong vòng 15 ngày sau khi nhập cảnh, tham gia đào tạo và khám sức khỏe",
+      "checklist": ["Đào tạo", "Khám sức khỏe"],
+      "relatedLinks": [
+        "Lịch đào tạo và đối tượng"
+      ]
+    },
+    "12": {
+      "title": "Phân công nơi làm việc và bắt đầu làm việc"
+    },
+    "13": {
+      "title": "Đăng ký thẻ người nước ngoài",
+      "relatedLinks": [
+        "Liên kết đăng ký/đặt lịch thẻ người nước ngoài",
+        "Liên kết tài liệu và thông tin"
+      ]
+    }
+  }
 }
+  

@@ -21,7 +21,7 @@ if (Platform.OS !== 'web') {
   const { persist, createJSONStorage } = require('zustand/middleware');
   useCountryStore = create<CountryState>()(
     persist(createStore(), {
-      name: 'user_country',
+      name: 'country',
       storage: createJSONStorage(() => AsyncStorage),
     })
   );
