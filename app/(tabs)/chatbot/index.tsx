@@ -1,7 +1,7 @@
 import { useConversationStore } from '@/stores/conversationStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   Button,
@@ -23,6 +23,7 @@ const getMessagesKey = (id: number) => `chat_messages_${id}`;
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
   const { conversations, setConversations } = useConversationStore();
 
   const conversationId = Number(id);
@@ -30,6 +31,7 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<
     { id: number; role: 'user' | 'assistant'; content: string }[]
   >([]);
+  const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
 
   const sendMessageToOpenAI = async (context: typeof messages) => {
     try {
@@ -52,11 +54,23 @@ export default function ChatScreen() {
     }
   };
 
-  const handleSend = async (text: string) => {
-    if (!text.trim()) return;
+  const startNewConversation = async (text: string) => {
+    const idToUse = Date.now();
+    const newConversation = { id: idToUse, title: text };
+    const stored = await AsyncStorage.getItem('chat_conversations');
+    const existing = stored ? JSON.parse(stored) : [];
+    const updatedConversations = [...existing, newConversation];
+    await AsyncStorage.setItem('chat_conversations', JSON.stringify(updatedConversations));
+    setConversations(updatedConversations);
+    setInput(''); // clear input immediately
+    await AsyncStorage.setItem(getMessagesKey(idToUse), JSON.stringify([
+      { id: Date.now(), role: 'user', content: text }
+    ]));
+    router.replace(`/(tabs)/chatbot/${idToUse}`);
+  };
 
+  const sendMessage = async (text: string) => {
     const isFirstMessage = messages.length === 0;
-
     const userMsg = { id: Date.now(), role: 'user' as const, content: text };
     const updated = [...messages, userMsg];
     setMessages(updated);
@@ -66,15 +80,12 @@ export default function ChatScreen() {
     const assistantMsg = { id: Date.now() + 1, role: 'assistant' as const, content: reply };
     const finalMessages = [...updated, assistantMsg];
     setMessages(finalMessages);
-    // Persist to AsyncStorage
-    if (conversationId) {
-      await AsyncStorage.setItem(getMessagesKey(conversationId), JSON.stringify(finalMessages));
-    }
 
-    if (isFirstMessage && conversationId) {
+    await AsyncStorage.setItem(getMessagesKey(conversationId), JSON.stringify(finalMessages));
+
+    if (isFirstMessage) {
       const stored = await AsyncStorage.getItem('chat_conversations');
       const base = stored ? JSON.parse(stored) : conversations;
-
       const updatedConversations = base.map((c: { id: number }) =>
         c.id === conversationId ? { ...c, title: finalMessages[0].content } : c
       );
@@ -83,14 +94,24 @@ export default function ChatScreen() {
     }
   };
 
+  const handleSend = (text: string) => {
+    if (!text.trim()) return;
+    if (!conversationId || isNaN(conversationId)) {
+      startNewConversation(text);
+    } else {
+      sendMessage(text);
+    }
+  };
+
   useEffect(() => {
+    if (!conversationId || isNaN(conversationId)) return;
+
     const loadMessages = async () => {
       const saved = await AsyncStorage.getItem(getMessagesKey(conversationId));
       if (saved) {
         const parsed = JSON.parse(saved);
         setMessages(parsed);
-  
-        // ✅ 조건: user 메시지만 있고 assistant 응답이 없을 경우
+
         if (parsed.length === 1 && parsed[0].role === 'user') {
           const reply = await sendMessageToOpenAI(parsed);
           const assistantMsg = { id: Date.now(), role: 'assistant', content: reply };
@@ -99,7 +120,9 @@ export default function ChatScreen() {
           await AsyncStorage.setItem(getMessagesKey(conversationId), JSON.stringify(final));
         }
       }
+      setHasLoadedInitially(true);
     };
+
     loadMessages();
   }, [conversationId]);
 
