@@ -153,6 +153,27 @@
         "제도 설명, 관련 서식 다운로드 링크"
       ]
     }
+  },
+  "chat": {
+    "examples": {
+      "lost_registration_card": "외국인 등록증을 잃어버렸을 때 어떻게 해야 하나요?",
+      "h2_job_change": "H-2 비자로 직장 변경이 가능한가요?",
+      "stay_extension": "체류 기간 연장은 언제 신청하나요?"
+    },
+    "prompt": {
+      "title": "무엇이 궁금하신가요?"
+    },
+    "input": {
+      "placeholder_first": "위 예시처럼 질문해보세요!",
+      "placeholder": "무엇이든 물어보세요"
+    },
+    "loading": "답변을 생성 중입니다...",
+    "sidebar": {
+      "new_chat": "+ 새 대화 시작",
+      "conversation_list": "대화 목록",
+      "empty_message": "저장된 대화가 없습니다.",
+      "input_placeholder": "대화 이름 입력"
+    }
   }
 }
   

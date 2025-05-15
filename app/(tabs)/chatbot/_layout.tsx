@@ -2,6 +2,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Animated,
   Modal,
@@ -23,6 +24,7 @@ const getMessagesKey = (id: number) => `chat_messages_${id}`;
 
 export default function ChatbotLayout() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConvId, setCurrentConvId] = useState<number | null>(null);
   const [conversationName, setConversationName] = useState('');
@@ -95,7 +97,7 @@ export default function ChatbotLayout() {
                   <Text style={{ fontSize: 24 }}>≡</Text>
                 </TouchableOpacity>
                 <TextInput
-                  placeholder="대화 이름 입력"
+                  placeholder={t('chat.sidebar.input_placeholder')}
                   style={styles.input}
                   value={conversationName}
                   onChangeText={setConversationName}
@@ -105,7 +107,7 @@ export default function ChatbotLayout() {
                     const newId = Date.now();
                     const newConv = {
                       id: newId,
-                      title: conversationName.trim() || '새 대화',
+                      title: conversationName.trim() || 'new chat',
                     };
 
                     const updated = [...conversations, newConv];
@@ -126,12 +128,12 @@ export default function ChatbotLayout() {
                     marginBottom: 16,
                   }}
                 >
-                  <Text style={{ color: '#fff', textAlign: 'center' }}>+ 새 대화 시작</Text>
+                  <Text style={{ color: '#fff', textAlign: 'center' }}>{t('chat.sidebar.new_chat')}</Text>
                 </TouchableOpacity>
-                <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 12 }}>대화 목록</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 12 }}>{t('chat.sidebar.conversation_list')}</Text>
                 {conversations.length === 0 ? (
                   <Text style={{ color: '#aaa', fontStyle: 'italic', marginTop: 8 }}>
-                    저장된 대화가 없습니다.
+                     {t('chat.sidebar.empty_message')}
                   </Text>
                 ) : (
                   conversations.map((conv) =>

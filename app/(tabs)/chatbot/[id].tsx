@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   Keyboard,
@@ -27,6 +28,7 @@ const getMessagesKey = (id: number) => `chat_messages_${id}`;
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
   const { conversations, setConversations } = useConversationStore();
+  const { t } = useTranslation();
 
   const conversationId = Number(id);
   const [input, setInput] = useState('');
@@ -93,6 +95,11 @@ export default function ChatScreen() {
       await AsyncStorage.setItem('chat_conversations', JSON.stringify(updatedConversations));
     }
   };
+  const exampleMessages = [
+    t('chat.examples.lost_registration_card'),
+    t('chat.examples.h2_job_change'),
+    t('chat.examples.stay_extension'),
+  ];
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -157,7 +164,7 @@ export default function ChatScreen() {
 
         {messages.length === 0 && (
           <View style={styles.examplesBelow}>
-            <Text style={styles.examplesTitle}>무엇이 궁금하신가요?</Text>
+            <Text style={styles.examplesTitle}>{t('chat.prompt.title')}</Text>
             {exampleMessages.map((msg, idx) => (
               <TouchableOpacity key={idx} onPress={() => handleSend(msg)}>
                 <Text style={styles.exampleText}>❝ {msg} ❞</Text>
@@ -168,7 +175,7 @@ export default function ChatScreen() {
 
         {isLoading && (
           <View style={{ paddingHorizontal: 16, marginBottom: 80 }}>
-            <Text style={{ color: '#888', fontStyle: 'italic' }}>답변을 생성 중입니다...</Text>
+            <Text style={{ color: '#888', fontStyle: 'italic' }}>{t('chat.loading')}</Text>
           </View>
         )}
 
@@ -177,7 +184,7 @@ export default function ChatScreen() {
             <TextInput
               value={input}
               onChangeText={setInput}
-              placeholder={messages.length === 0 ? "위 예시처럼 질문해보세요!" : "무엇이든 물어보세요"}
+              placeholder={messages.length === 0 ? t('chat.input.placeholder_first') : t('chat.input.placeholder')}
               style={styles.input}
               placeholderTextColor={'#999'}
               underlineColorAndroid="transparent"

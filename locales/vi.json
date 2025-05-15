@@ -153,6 +153,27 @@
         "Liên kết tài liệu và thông tin"
       ]
     }
+  },
+  "chat": {
+    "examples": {
+      "lost_registration_card": "Tôi cần làm gì nếu bị mất thẻ đăng ký người nước ngoài?",
+      "h2_job_change": "Tôi có thể chuyển việc với visa H-2 không?",
+      "stay_extension": "Khi nào tôi nên xin gia hạn thời gian lưu trú?"
+    },
+    "prompt": {
+      "title": "Bạn đang thắc mắc điều gì?"
+    },
+    "input": {
+      "placeholder_first": "Hãy thử hỏi một câu giống như ví dụ ở trên!",
+      "placeholder": "Hãy hỏi bất kỳ điều gì bạn muốn"
+    },
+    "loading": "Đang tạo câu trả lời...",
+    "sidebar": {
+      "new_chat": "+ Tạo mới",
+      "conversation_list": "Cuộc trò chuyện",
+      "empty_message": "Không có cuộc trò chuyện",
+      "input_placeholder": "Nhập tên"
+    }
   }
 }
   

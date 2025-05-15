@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -15,17 +16,12 @@ import {
   View,
 } from 'react-native';
 
-const exampleMessages = [
-  '외국인 등록증을 잃어버렸을 때 어떻게 해야 하나요?',
-  'H-2 비자로 직장 변경이 가능한가요?',
-  '체류 기간 연장은 언제 신청하나요?',
-];
-
 const getMessagesKey = (id: number) => `chat_messages_${id}`;
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const { conversations, setConversations } = useConversationStore();
 
   const conversationId = Number(id);
@@ -104,6 +100,11 @@ export default function ChatScreen() {
       sendMessage(text);
     }
   };
+  const exampleMessages = [
+    t('chat.examples.lost_registration_card'),
+    t('chat.examples.h2_job_change'),
+    t('chat.examples.stay_extension'),
+  ];
 
   useEffect(() => {
     if (!conversationId || isNaN(conversationId)) return;
@@ -153,7 +154,7 @@ export default function ChatScreen() {
 
         {messages.length === 0 && (
           <View style={styles.examplesBelow}>
-            <Text style={styles.examplesTitle}>무엇이 궁금하신가요?</Text>
+            <Text style={styles.examplesTitle}>{t('chat.prompt.title')}</Text>
             {exampleMessages.map((msg, idx) => (
               <TouchableOpacity key={idx} onPress={() => handleSend(msg)}>
                 <Text style={styles.exampleText}>❝ {msg} ❞</Text>
@@ -167,7 +168,7 @@ export default function ChatScreen() {
             <TextInput
               value={input}
               onChangeText={setInput}
-              placeholder={messages.length === 0 ? "위 예시처럼 질문해보세요!" : "무엇이든 물어보세요"}
+              placeholder={messages.length === 0 ? t('chat.input.placeholder_first') : t('chat.input.placeholder')}
               style={styles.input}
               placeholderTextColor={'#999'}
               underlineColorAndroid="transparent"

@@ -153,5 +153,26 @@
         "Form downloads and system information"
       ]
     }
+  },
+  "chat": {
+    "examples": {
+      "lost_registration_card": "What should I do if I lose my alien registration card?",
+      "h2_job_change": "Is it possible to change jobs with an H-2 visa?",
+      "stay_extension": "When should I apply for an extension of stay?"
+    },
+    "prompt": {
+      "title": "What are you curious about?"
+    },
+    "input": {
+      "placeholder_first": "Try asking a question like the examples above!",
+      "placeholder": "Ask anything you want"
+    },
+    "loading": "Generating a response...",
+    "sidebar": {
+      "new_chat": "+ New Chat",
+      "conversation_list": "Chats",
+      "empty_message": "No saved chats yet.",
+      "input_placeholder": "Chat name"
+    }
   }
 }
