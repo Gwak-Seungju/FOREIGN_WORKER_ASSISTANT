@@ -347,9 +347,9 @@ export default function OnboardingScreen() {
                       >
                         <View style={styles.checkboxBox}>
                         {Array.isArray(checkedChecklistItems[item.id]) &&
-  checkedChecklistItems[item.id].includes(i) && (
-    <Entypo name="check" size={14} color="#007bff" />
-)}
+                          checkedChecklistItems[item.id].includes(i) && (
+                            <Entypo name="check" size={14} color="#007bff" />
+                        )}
                         </View>
                         <Text style={styles.checklistText}>{t(`onboarding.${item.id}.checklist.${i}`)}</Text>
                       </TouchableOpacity>
