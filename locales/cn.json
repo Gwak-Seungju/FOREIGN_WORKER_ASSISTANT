@@ -1,0 +1,180 @@
+{
+  "initialSetup": {
+    "question1": "你来自哪个国家？",
+    "question2": "你已经在韩国工作了吗？",
+    "question3": "你计划申请哪种签证？",
+    "modalTitle": {
+      "hasJob": "你已经在韩国工作了！",
+      "noJob": "你还没有在韩国工作啊"
+    },
+    "modalSubtitle": {
+      "hasJob": "我们会帮助你更好地适应韩国生活！",
+      "noJob": "我们将一步一步地帮助你！"
+    },
+    "moveToMain": "前往主页",
+    "moveToNext": "进入下一步",
+    "visaE9": "E-9（非韩民族外国人）",
+    "visaH2": "H-2（海外同胞）- 准备中",
+    "visaModalTitle": "很好！你选择了 E-9 签证",
+    "visaModalSubtitle": "现在我们将引导你进入引导流程"
+  },
+  "common": {
+    "next": "下一步",
+    "yes": "是",
+    "no": "否",
+    "close": "关闭",
+    "proceed": "继续",
+    "start": "开始",
+    "confirm": "确认"
+  },
+  "home": {
+    "title": "WorkerBridge",
+    "subtitle": "迈向韩国就业的第一步",
+    "description": "我们将帮助您顺利适应在韩国的生活。",
+    "calculator": "费用计算器",
+    "calculator_subtitle": "就业过程费用估算",
+    "calculator_description": "该服务可大致估算为准备赴韩就业所需的各项费用。",
+    "onboarding": "清单指南",
+    "onboarding_subtitle": "签证和就业流程说明",
+    "onboarding_description": "为准备赴韩工作的外国劳动者，根据签证类型分阶段提供所需流程和材料的指南服务。",
+    "chatbot": "聊天机器人咨询",
+    "chatbot_subtitle": "基于母语的聊天/AI 咨询",
+    "chatbot_description": "通过自然语言处理模型，提供以母语进行签证、就业、生活信息等多语言咨询服务。"
+  },
+  "language": {
+    "en": "英语",
+    "ko": "韩语",
+    "th": "泰语",
+    "vi": "越南语",
+    "cn": "中文",
+    "id": "印尼语"
+  },
+  "calculator": {
+    "title": "求职准备费用估算",
+    "description": "为准备在韩国就业的费用提供大致估算。",
+    "passportFee": "护照申请费用",
+    "documentFee": "文件申请费用",
+    "medicalFee": "体检费用",
+    "visaFee": "签证申请费",
+    "epsExamFee": "EPS-TOPIK考试费",
+    "airfare": "机票费用",
+    "estimatedCost": "预计约为 {{cost}}{{currency}}"
+  },
+  "country": {
+    "vietnam": "越南",
+    "thailand": "泰国"
+  },
+  "Country": "国家",
+  "onboarding": {
+    "guide": {
+      "check": "完成该阶段后请点击“检查”。",
+      "next": "点击“下一步”按钮进入下一阶段。",
+      "progress": "点击进度条可查看或跳转到特定阶段。",
+      "calculator": "可使用费用计算器大致估算准备就业所需的费用。"
+    },
+    "1": {
+      "title": "请确认先决条件",
+      "checklist": [
+        "您目前是否年满18至39岁？",
+        "是否无犯罪记录，并没有出境限制？",
+        "是否没有传染病或严重疾病，身体健康？",
+        "是否没有被禁止海外就业或未处于回国状态？"
+      ]
+    },
+    "2": {
+      "title": "请准备必要的文件",
+      "checklist": [
+        "护照复印件",
+        "身份证复印件",
+        "证件照片",
+        "最终学历证明",
+        "健康状况确认书"
+      ]
+    },
+    "3": {
+      "title": "请进行求职者名册（EPS）登记",
+      "checklist": [
+        "请确认登记时间通知",
+        "携带准备好的文件",
+        "请确保能进行事前短信认证等并访问机构",
+        "填写申请表并提交材料"
+      ]
+    },
+    "4": {
+      "title": "参加 EPS-TOPIK 考试",
+      "relatedLinks": [
+        "报名链接",
+        "考试日程链接",
+        "合格者公布链接"
+      ]
+    },
+    "5": {
+      "title": "请确认是否被列入 EPS 求职者名册"
+    },
+    "6": {
+      "title": "进行雇佣匹配和签署劳动合同"
+    },
+    "7": {
+      "title": "领取签证签发认定书",
+      "relatedLinks": [
+        "签发认定书领取"
+      ]
+    },
+    "8": {
+      "title": "申请签证",
+      "relatedLinks": {
+        "vietnam1": "预约链接（河内）",
+        "vietnam2": "预约链接（胡志明）",
+        "thailand1": "预约链接"
+      }
+    },
+    "9": {
+      "title": "预订航班",
+      "relatedLinks": {
+        "vietnam1": "航班预订",
+        "thailand1": "航班预订"
+      }
+    },
+    "10": {
+      "title": "请准备好相关文件并出发"
+    },
+    "11": {
+      "title": "入境韩国后15天内接受就业培训和健康检查",
+      "checklist": ["就业培训", "健康检查"],
+      "relatedLinks": [
+        "就业培训日程及对象确认"
+      ]
+    },
+    "12": {
+      "title": "安排工作岗位并开始工作"
+    },
+    "13": {
+      "title": "申请外国人登录证",
+      "relatedLinks": [
+        "外国人登录证申请/预约链接",
+        "制度说明与表格下载链接"
+      ]
+    }
+  },
+  "chat": {
+    "examples": {
+      "lost_registration_card": "如果我丢失了外国人登录证该怎么办？",
+      "h2_job_change": "持有 H-2 签证可以换工作吗？",
+      "stay_extension": "我应该何时申请延长居留期限？"
+    },
+    "prompt": {
+      "title": "您想了解什么？"
+    },
+    "input": {
+      "placeholder_first": "请像上面的例子一样提问！",
+      "placeholder": "请输入您的问题"
+    },
+    "loading": "正在生成回答...",
+    "sidebar": {
+      "new_chat": "+ 开始新对话",
+      "conversation_list": "对话列表",
+      "empty_message": "暂无保存的对话。",
+      "input_placeholder": "输入对话名称"
+    }
+  }
+}

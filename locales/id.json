@@ -1,0 +1,180 @@
+{
+  "initialSetup": {
+    "question1": "Dari negara mana Anda berasal?",
+    "question2": "Apakah Anda sudah bekerja di Korea?",
+    "question3": "Visa apa yang akan Anda ajukan?",
+    "modalTitle": {
+      "hasJob": "Anda sudah bekerja di Korea!",
+      "noJob": "Anda belum bekerja di Korea"
+    },
+    "modalSubtitle": {
+      "hasJob": "Kami akan membantu Anda beradaptasi dengan kehidupan di Korea!",
+      "noJob": "Kami akan membantu Anda dari awal, langkah demi langkah!"
+    },
+    "moveToMain": "Pergi ke Halaman Utama",
+    "moveToNext": "Lanjut ke Langkah Berikutnya",
+    "visaE9": "E-9 (Warga asing non-keturunan Korea)",
+    "visaH2": "H-2 (Keturunan Korea) - Sedang disiapkan",
+    "visaModalTitle": "Baik! Anda memilih visa E-9",
+    "visaModalSubtitle": "Sekarang kami akan membimbing Anda melalui proses onboarding"
+  },
+  "common": {
+    "next": "Berikutnya",
+    "yes": "Ya",
+    "no": "Tidak",
+    "close": "Tutup",
+    "proceed": "Lanjutkan",
+    "start": "Mulai",
+    "confirm": "Konfirmasi"
+  },
+  "home": {
+    "title": "WorkerBridge",
+    "subtitle": "Langkah pertama menuju pekerjaan di Korea",
+    "description": "Kami akan membantu Anda beradaptasi dengan kehidupan di Korea.",
+    "calculator": "Kalkulator Biaya",
+    "calculator_subtitle": "Perhitungan biaya proses kerja",
+    "calculator_description": "Layanan untuk memperkirakan secara kasar biaya yang dibutuhkan untuk persiapan kerja di Korea.",
+    "onboarding": "Panduan Checklist",
+    "onboarding_subtitle": "Panduan proses visa dan pekerjaan",
+    "onboarding_description": "Panduan bertahap mengenai dokumen dan prosedur yang dibutuhkan untuk tenaga kerja asing berdasarkan jenis visa.",
+    "chatbot": "Konsultasi Chatbot",
+    "chatbot_subtitle": "Chatbot/AI berbasis bahasa ibu",
+    "chatbot_description": "Layanan multibahasa yang menggunakan model pemrosesan bahasa alami agar pekerja asing dapat berkonsultasi tentang visa, pekerjaan, dan informasi kehidupan dalam bahasa ibu mereka."
+  },
+  "language": {
+    "en": "Inggris",
+    "ko": "Korea",
+    "th": "Thailand",
+    "vi": "Vietnam",
+    "cn": "Tiongkok",
+    "id": "Indonesia"
+  },
+  "calculator": {
+    "title": "Perkiraan Biaya Persiapan Kerja",
+    "description": "Memberikan estimasi kasar biaya untuk persiapan kerja di Korea.",
+    "passportFee": "Biaya pembuatan paspor",
+    "documentFee": "Biaya penerbitan dokumen",
+    "medicalFee": "Biaya pemeriksaan medis",
+    "visaFee": "Biaya permohonan visa",
+    "epsExamFee": "Biaya ujian EPS-TOPIK",
+    "airfare": "Tiket pesawat",
+    "estimatedCost": "Perkiraan sekitar {{cost}}{{currency}}"
+  },
+  "country": {
+    "vietnam": "Vietnam",
+    "thailand": "Thailand"
+  },
+  "Country": "Negara",
+  "onboarding": {
+    "guide": {
+      "check": "Jika Anda telah menyelesaikan tahap ini, tekan 'Cek'.",
+      "next": "Tekan tombol 'Berikutnya' untuk melanjutkan.",
+      "progress": "Klik batang kemajuan untuk melihat atau melompat ke tahap tertentu.",
+      "calculator": "Gunakan kalkulator biaya untuk memperkirakan total biaya persiapan kerja."
+    },
+    "1": {
+      "title": "Periksa persyaratan awal",
+      "checklist": [
+        "Apakah usia Anda saat ini antara 18 dan 39 tahun?",
+        "Apakah Anda tidak memiliki catatan kriminal dan tidak dilarang bepergian?",
+        "Apakah Anda sehat dan tidak memiliki penyakit menular atau serius?",
+        "Apakah Anda tidak dalam kondisi dilarang kerja di luar negeri atau baru saja dipulangkan?"
+      ]
+    },
+    "2": {
+      "title": "Siapkan dokumen yang dibutuhkan",
+      "checklist": [
+        "Salinan paspor",
+        "Salinan identitas",
+        "Foto ukuran paspor",
+        "Surat keterangan pendidikan terakhir",
+        "Surat keterangan kesehatan"
+      ]
+    },
+    "3": {
+      "title": "Daftarkan diri ke daftar pencari kerja (EPS)",
+      "checklist": [
+        "Periksa pengumuman jadwal pendaftaran",
+        "Bawa semua dokumen yang dibutuhkan",
+        "Pastikan dapat melakukan verifikasi SMS dan kunjungi lembaga terkait",
+        "Isi formulir pendaftaran dan serahkan dokumen"
+      ]
+    },
+    "4": {
+      "title": "Ikuti ujian EPS-TOPIK",
+      "relatedLinks": [
+        "Link pendaftaran",
+        "Link jadwal ujian",
+        "Link pengumuman hasil"
+      ]
+    },
+    "5": {
+      "title": "Periksa apakah nama Anda terdaftar di EPS"
+    },
+    "6": {
+      "title": "Lakukan pencocokan kerja dan kontrak kerja"
+    },
+    "7": {
+      "title": "Ambil sertifikat pengakuan penerbitan visa",
+      "relatedLinks": [
+        "Pengambilan sertifikat penerbitan visa"
+      ]
+    },
+    "8": {
+      "title": "Ajukan permohonan visa",
+      "relatedLinks": {
+        "vietnam1": "Link reservasi (Hanoi)",
+        "vietnam2": "Link reservasi (Ho Chi Minh)",
+        "thailand1": "Link reservasi"
+      }
+    },
+    "9": {
+      "title": "Pesan tiket pesawat",
+      "relatedLinks": {
+        "vietnam1": "Pemesanan tiket pesawat",
+        "thailand1": "Pemesanan tiket pesawat"
+      }
+    },
+    "10": {
+      "title": "Bawa semua dokumen yang diperlukan dan berangkat"
+    },
+    "11": {
+      "title": "Dalam 15 hari setelah tiba di Korea, ikuti pelatihan kerja dan pemeriksaan kesehatan",
+      "checklist": ["Pelatihan kerja", "Pemeriksaan kesehatan"],
+      "relatedLinks": [
+        "Jadwal pelatihan kerja dan daftar peserta"
+      ]
+    },
+    "12": {
+      "title": "Penempatan tempat kerja dan mulai bekerja"
+    },
+    "13": {
+      "title": "Ajukan pembuatan Kartu Identitas Orang Asing",
+      "relatedLinks": [
+        "Link pendaftaran/konsultasi kartu identitas",
+        "Link penjelasan sistem dan unduhan formulir"
+      ]
+    }
+  },
+  "chat": {
+    "examples": {
+      "lost_registration_card": "Apa yang harus saya lakukan jika kehilangan kartu registrasi orang asing?",
+      "h2_job_change": "Bisakah saya pindah kerja dengan visa H-2?",
+      "stay_extension": "Kapan saya harus mengajukan perpanjangan izin tinggal?"
+    },
+    "prompt": {
+      "title": "Apa yang ingin Anda ketahui?"
+    },
+    "input": {
+      "placeholder_first": "Coba ajukan pertanyaan seperti contoh di atas!",
+      "placeholder": "Tanyakan apa saja"
+    },
+    "loading": "Sedang membuat jawaban...",
+    "sidebar": {
+      "new_chat": "+ Mulai percakapan baru",
+      "conversation_list": "Daftar percakapan",
+      "empty_message": "Tidak ada percakapan tersimpan.",
+      "input_placeholder": "Masukkan nama percakapan"
+    }
+  }
+}

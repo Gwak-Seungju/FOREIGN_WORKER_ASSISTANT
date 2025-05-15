@@ -19,6 +19,8 @@ export function LanguageDropdown({
     { label: 'English', value: 'en' },
     { label: 'ภาษาไทย', value: 'th' },
     { label: 'Tiếng Việt', value: 'vi' },
+    { label: '中文', value: 'cn' },
+    { label: 'Indonesia', value: 'id'}
   ];
 
   return (

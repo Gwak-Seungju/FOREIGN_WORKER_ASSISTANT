@@ -45,7 +45,9 @@
     "en": "Tiếng Anh",
     "ko": "Tiếng Hàn",
     "th": "Tiếng Thái",
-    "vi": "Tiếng Việt"
+    "vi": "Tiếng Việt",
+    "cn": "Tiếng Trung",
+    "id": "Tiếng Indonesia"
   },
   "calculator": {
     "title": "Tính chi phí chuẩn bị đi làm",
@@ -176,4 +178,3 @@
     }
   }
 }
-  

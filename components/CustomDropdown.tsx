@@ -76,5 +76,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 8,
     backgroundColor: '#fff',
+    maxHeight: 1000,
   }
 });

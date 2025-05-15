@@ -45,7 +45,9 @@
     "en": "English",
     "ko": "Korean",
     "th": "Thai",
-    "vi": "Vietnamese"
+    "vi": "Vietnamese",
+    "cn": "Chinese",
+    "id": "Indonesian"
   },
   "calculator": {
     "title": "Employment Preparation Cost Estimator",
